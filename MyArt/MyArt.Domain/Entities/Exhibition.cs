@@ -16,5 +16,10 @@ namespace MyArt.Domain.Entities
         public EAnnouncement Announcement { get; set; }
         public ERelease Release { get; set; }
 
+        public List<ExhibitionToArt> ExhibitionToArts { get; set; }
+        public List<LikeExhibitions> LikeExhibitions { get; set; }
+        public List<ExhibitionComments> ExhibitionComments { get; set; }
+        public List<ExhibitionToArtForm> ExhibitionToArtForms { get; set; }
+
     }
 }

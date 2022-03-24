@@ -18,5 +18,10 @@ namespace MyArt.Domain.Entities
         public DateTime AnnouncementDate { get; set; }
         public DateTime ReleaseDate { get; set; }
         public int GenreId { get; set; }
+
+        public List<GenreToFilm> GenreToFilms { get; set; }
+        public List<LikeFilms> LikeFilms { get; set; }
+        public List<FilmComments> FilmComments { get; set; }
+        public List<BoughtFilms> BoughtFilms { get; set; }
     }
 }

@@ -11,5 +11,10 @@ namespace MyArt.Domain.Entities
         public int ShareCount { get; set; }
         public DateTime Date { get; set; }
         public int UserId { get; set; }
+
+        public User User { get; set; }
+        public List<ArtToBoard> ArtToBoards { get; set; }
+        public List<LikeBoards> LikeBoards { get; set; }
+        public List<ArtFormToBoard> ArtFormToBoards { get; set; }
     }
 }

@@ -5,5 +5,8 @@ namespace MyArt.Domain.Entities
     {
         public int UserId { get; set; }
         public int ExhibitionId { get; set; }
+
+        public User User { get; set; }
+        public Exhibition Exhibition { get; set; }
     }
 }

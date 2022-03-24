@@ -19,5 +19,12 @@ namespace MyArt.Domain.Entities
         public EType Type { get; set; }
         public DateTime Date { get; set; }
         public int UserId { get; set; }
+
+        public User User { get; set; }
+        public List<ArtToBoard> ArtToBoards { get; set; }
+        public List<ArtComments> ArtComments { get; set; }
+        public List<LikeArts> LikeArts { get; set; }
+        public List<ExhibitionToArt> ExhibitionToArts { get; set; }
+        public List<ArtFormToArt> ArtFormToArts { get; set; }
     }
 }
