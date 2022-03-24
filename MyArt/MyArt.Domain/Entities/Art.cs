@@ -15,6 +15,7 @@ namespace MyArt.Domain.Entities
         public string Year { get; set; }
         public ESellingAvailability SellingAvailability { get; set; }
         public EVisible Visible { get; set; }
+        public EModeration Moderation { get; set; }
         public EType Type { get; set; }
         public DateTime Date { get; set; }
         public int UserId { get; set; }
