@@ -21,6 +21,7 @@ namespace MyArt.Domain.Entities
         public List<BoughtFilms> BoughtFilms { get; set; }
         public List<LikeExhibitions> LikeExhibitions { get; set; }
         public List<ExhibitionComments> ExhibitionComments { get; set; }
+        public List<RoleToUser> RoleToUsers { get; set; }
 
     }
 }
