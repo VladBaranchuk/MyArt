@@ -15,9 +15,7 @@ namespace MyArt.Domain.Entities
         public EVisible Visible { get; set; }
         public EAnnouncement Announcement { get; set; }
         public ERelease Release { get; set; }
-        public DateTime AnnouncementDate { get; set; }
         public DateTime ReleaseDate { get; set; }
-        public int GenreId { get; set; }
 
         public List<GenreToFilm> GenreToFilms { get; set; }
         public List<LikeFilms> LikeFilms { get; set; }

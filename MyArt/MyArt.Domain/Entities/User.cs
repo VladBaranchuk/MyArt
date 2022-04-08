@@ -8,7 +8,7 @@ namespace MyArt.Domain.Entities
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string Email { get; set; }
-        public string Password { get; set; }
+        public string PasswordHash { get; set; }
         public string Description { get; set; }
 
         public List<Art> Arts { get; set; }
@@ -22,6 +22,5 @@ namespace MyArt.Domain.Entities
         public List<LikeExhibitions> LikeExhibitions { get; set; }
         public List<ExhibitionComments> ExhibitionComments { get; set; }
         public List<RoleToUser> RoleToUsers { get; set; }
-
     }
 }
