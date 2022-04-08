@@ -8,7 +8,7 @@ namespace MyArt.DataAccess.Configurations
     {
         public void Configure(EntityTypeBuilder<RoleToUser> builder)
         {
-            builder.ToTable("LikeArts");
+            builder.ToTable("RoleToUser");
 
             builder.HasKey(x => new { x.UserId, x.RoleId });
 

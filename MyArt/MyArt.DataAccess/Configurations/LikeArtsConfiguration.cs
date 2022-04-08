@@ -12,7 +12,7 @@ namespace MyArt.DataAccess.Configurations
 
             builder.HasKey(x => new { x.UserId, x.ArtId });
 
-            builder.HasOne(x => x.User).WithMany(x => x.LikeArts).HasForeignKey(x => x.UserId);
+            builder.HasOne(x => x.User).WithMany(x => x.LikeArts).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
             builder.HasOne(x => x.Art).WithMany(x => x.LikeArts).HasForeignKey(x => x.ArtId);
         }
     }

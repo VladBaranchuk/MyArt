@@ -15,8 +15,8 @@ namespace MyArt.DataAccess.Configurations
             builder.Property(x => x.Text).IsRequired();
             builder.Property(x => x.Date).IsRequired().HasDefaultValue(DateTime.Now);
 
-            builder.HasOne(x => x.User).WithMany(x => x.ArtComments).HasForeignKey(x => x.UserId);
             builder.HasOne(x => x.Art).WithMany(x => x.ArtComments).HasForeignKey(x => x.ArtId);
+            builder.HasOne(x => x.User).WithMany(x => x.ArtComments).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

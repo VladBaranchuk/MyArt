@@ -8,6 +8,5 @@ namespace MyArt.Domain.Entities
 
         public User User { get; set; }
         public Role Role { get; set; }
-
     }
 }
