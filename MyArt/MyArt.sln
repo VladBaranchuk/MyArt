@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31911.196
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyArt.Domain", "MyArt.Domain\MyArt.Domain.csproj", "{C709B81B-64E2-47F7-B62C-DB88A45B9973}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyArt.DataAccess", "MyArt.DataAccess\MyArt.DataAccess.csproj", "{CFED309F-D621-486D-A795-97076ED23D02}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyArt.DataAccess", "MyArt.DataAccess\MyArt.DataAccess.csproj", "{CFED309F-D621-486D-A795-97076ED23D02}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyArt.BusinessLogic", "MyArt.BusinessLogic\MyArt.BusinessLogic.csproj", "{4A6C58A7-0AF2-4E84-BF9B-2C9ADDCD442D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{CFED309F-D621-486D-A795-97076ED23D02}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CFED309F-D621-486D-A795-97076ED23D02}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CFED309F-D621-486D-A795-97076ED23D02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A6C58A7-0AF2-4E84-BF9B-2C9ADDCD442D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A6C58A7-0AF2-4E84-BF9B-2C9ADDCD442D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A6C58A7-0AF2-4E84-BF9B-2C9ADDCD442D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A6C58A7-0AF2-4E84-BF9B-2C9ADDCD442D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
