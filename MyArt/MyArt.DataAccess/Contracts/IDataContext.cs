@@ -5,6 +5,6 @@ namespace MyArt.DataAccess.Contracts
 {
     public interface IDataContext
     {
-        public Task<int> SaveChangesAsync(CancellationToken token);
+        public Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
