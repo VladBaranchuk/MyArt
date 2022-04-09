@@ -1,5 +1,5 @@
-﻿
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using MyArt.DataAccess.Contracts;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,9 +10,9 @@ namespace MyArt.DataAccess.Repositories
     {
         private readonly DbSet<TEntity> _entities;
 
-        public BaseRepository(AppDbContext dbContext)
+        public BaseRepository(IDataProvider dataProvider)
         {
-            _entities = dbContext.Set<TEntity>();
+            _entities = dataProvider.GetSet<TEntity>();
         }
 
         public virtual Task CreateAsync(TEntity entity, CancellationToken cancellationToken)
