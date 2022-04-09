@@ -2,7 +2,7 @@
 
 namespace MyArt.DataAccess.Contracts.Providers
 {
-    public interface IExibitionProvider : IProvider<Exhibition>
+    public interface IExhibitionProvider : IProvider<Exhibition>
     {
     }
 }

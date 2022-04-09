@@ -15,10 +15,10 @@ namespace MyArt.DataAccess.Providers
         {
             _entities = dataProvider.GetSet<TEntity>();
         }
-        public virtual Task<List<TEntity>> GetAllAsync(int page, int size, CancellationToken token)
+        public virtual Task<List<TEntity>> GetAllAsync(int page, int size, CancellationToken cancellationToken)
         {
-            return _entities.Skip(page * size).Take(size).ToListAsync(token);
+            return _entities.Skip(page * size).Take(size).ToListAsync(cancellationToken);
         }
-        public abstract Task<TEntity> GetItemByIdAsync(int id, CancellationToken token);
+        public abstract Task<TEntity> GetItemByIdAsync(int id, CancellationToken cancellationToken);
     }
 }
