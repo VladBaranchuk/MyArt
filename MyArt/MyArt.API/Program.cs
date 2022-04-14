@@ -1,33 +1,75 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using MyArt.API.Helpers;
 using MyArt.API.Infrastructure.Configurations;
+using MyArt.BusinessLogic.Contracts;
+using MyArt.BusinessLogic.Models;
+using MyArt.BusinessLogic.Services;
 using MyArt.DataAccess;
 using MyArt.DataAccess.Contracts;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var jwtConfig = new JwtOptions();
 
 // Add services to the container.
 
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<AppDbContext>(options =>
-        options.UseSqlServer("Server=.\\SQLEXPRESS;Database=MyArt;Trusted_Connection=true"));
+        options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddTransient<IDataContext, DataContext>();
 
+builder.Configuration.GetSection("JwtOptions").Bind(jwtConfig);
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
+
+builder.Services.AddAuthorization();
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidIssuer = jwtConfig.Issuer,
+        ValidateAudience = true,
+        ValidAudience = jwtConfig.Audience,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.SecretKey))
+    };
+});
+
 builder.Services.AddDataAccess();
+
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost", builder => builder.AllowAnyHeader().AllowAnyMethod()
+    .AllowAnyOrigin()
+    );
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
+app.UseMiddleware<ErrorHandlerMiddleware>();
 
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+
+    app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 
+app.UseRouting();
+app.UseCors("AllowLocalhost");
+app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapControllers();
-
+app.UseEndpoints(x => x.MapDefaultControllerRoute());
 app.Run();
