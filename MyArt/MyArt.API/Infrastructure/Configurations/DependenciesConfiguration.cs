@@ -1,4 +1,9 @@
-﻿using MyArt.DataAccess.Contracts;
+﻿using FluentValidation;
+using MyArt.API.Validations;
+using MyArt.API.ViewModels;
+using MyArt.BusinessLogic.Mappings;
+using MyArt.DataAccess;
+using MyArt.DataAccess.Contracts;
 using MyArt.DataAccess.Contracts.Providers;
 using MyArt.DataAccess.Contracts.Repositories;
 using MyArt.DataAccess.Providers;
@@ -11,6 +16,8 @@ namespace MyArt.API.Infrastructure.Configurations
     {
         public static IServiceCollection AddDataAccess(this IServiceCollection services)
         {
+            services.AddScoped<IDataProvider, DataProvider>();
+
             // IRepository
             services.AddScoped<IRepository<ArtForm>, ArtFormRepository>();
             services.AddScoped<IArtFormRepository, ArtFormRepository>();
@@ -42,6 +49,22 @@ namespace MyArt.API.Infrastructure.Configurations
             services.AddScoped<IGenreProvider, GenreProvider>();
             services.AddScoped<IProvider<User>, UserProvider>();
             services.AddScoped<IUserProvider, UserProvider>();
+
+            return services;
+        }
+        public static IServiceCollection AddMappings(this IServiceCollection services)
+        {
+            services.AddAutoMapper(x =>
+            {
+                x.AddProfile<UserProfile>();
+            });
+
+            return services;
+        }
+        public static IServiceCollection AddValidators(this IServiceCollection services)
+        {
+            services.AddScoped<IValidator<RegisterViewModel>, RegisterValidator>();
+            services.AddScoped<IValidator<AuthenticationViewModel>, AuthenticationValidator>();
 
             return services;
         }

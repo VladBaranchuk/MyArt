@@ -42,6 +42,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 builder.Services.AddDataAccess();
+builder.Services.AddMappings();
+builder.Services.AddValidators();
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
