@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyArt.DataAccess", "MyArt.D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyArt.BusinessLogic", "MyArt.BusinessLogic\MyArt.BusinessLogic.csproj", "{4A6C58A7-0AF2-4E84-BF9B-2C9ADDCD442D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyArt.API", "MyArt.API\MyArt.API.csproj", "{C984F6F6-2328-4857-A779-2F3EB65066EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MyArt.API", "MyArt.API\MyArt.API.csproj", "{C984F6F6-2328-4857-A779-2F3EB65066EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyArt.API.ViewModels", "MyArt.API.ViewModels\MyArt.API.ViewModels.csproj", "{DFAB13DA-E44D-4A41-993B-76CEEC291E24}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{C984F6F6-2328-4857-A779-2F3EB65066EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C984F6F6-2328-4857-A779-2F3EB65066EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C984F6F6-2328-4857-A779-2F3EB65066EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DFAB13DA-E44D-4A41-993B-76CEEC291E24}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DFAB13DA-E44D-4A41-993B-76CEEC291E24}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DFAB13DA-E44D-4A41-993B-76CEEC291E24}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DFAB13DA-E44D-4A41-993B-76CEEC291E24}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

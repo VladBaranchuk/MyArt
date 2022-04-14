@@ -16,9 +16,19 @@ namespace MyArt.DataAccess.Providers
             _userEntities = dataProvider.GetSet<User>();
         }
 
-        public async override Task<User> GetItemByIdAsync(int id, CancellationToken cancellationToken)
+        public override Task<User> GetItemByIdAsync(int id, CancellationToken token)
         {
-            return await _userEntities.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+            return _userEntities.Include(x => x.RoleToUsers).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public Task<User> GetItemByEmailAsync(string email, CancellationToken token)
+        {
+            return _userEntities.Include(x => x.RoleToUsers).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Email == email);
+        }
+
+        public Task<bool> HasAnyByEmailAsync(string email, CancellationToken token)
+        {
+            return _userEntities.AnyAsync(x => x.Email == email, token);
         }
     }
 }

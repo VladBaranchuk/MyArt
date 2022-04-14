@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MyArt.BusinessLogic\MyArt.BusinessLogic.csproj" />
     <ProjectReference Include="..\MyArt.DataAccess\MyArt.DataAccess.csproj" />
   </ItemGroup>
 
