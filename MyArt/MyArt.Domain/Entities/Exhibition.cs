@@ -9,9 +9,9 @@ namespace MyArt.Domain.Entities
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime AnnounceDate { get; set; }
-        public DateTime ReleaseDate { get; set; }
-        public DateTime ExpirationDate { get; set; }
-        public int ShareCount { get; set; }
+        public DateTime? ReleaseDate { get; set; }
+        public DateTime? ExpirationDate { get; set; }
+        public int? ShareCount { get; set; }
         public EVisible Visible { get; set; }
         public EModeration Moderation { get; set; }
         public EAnnouncement Announcement { get; set; }

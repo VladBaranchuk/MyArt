@@ -16,9 +16,9 @@ namespace MyArt.DataAccess.Configurations
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Description).IsRequired();
             builder.Property(x => x.AnnounceDate).IsRequired();
-            builder.Property(x => x.ReleaseDate);
-            builder.Property(x => x.ExpirationDate);
-            builder.Property(x => x.ShareCount);
+            builder.Property(x => x.ReleaseDate).IsRequired(false);
+            builder.Property(x => x.ExpirationDate).IsRequired(false);
+            builder.Property(x => x.ShareCount).IsRequired(false);
             builder.Property(x => x.Visible).IsRequired().HasDefaultValue(EVisible.IsVisible);
             builder.Property(x => x.Moderation).IsRequired().HasDefaultValue(EModeration.NotModerated);
             builder.Property(x => x.Announcement).IsRequired().HasDefaultValue(EAnnouncement.Announced);

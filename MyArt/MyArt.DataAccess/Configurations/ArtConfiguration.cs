@@ -18,10 +18,10 @@ namespace MyArt.DataAccess.Configurations
             builder.Property(x => x.BrightColor).IsRequired();
             builder.Property(x => x.MutedColor).IsRequired();
             builder.Property(x => x.DarkColor).IsRequired();
-            builder.Property(x => x.ShareCount);
+            builder.Property(x => x.ShareCount).IsRequired(false);
             builder.Property(x => x.Price).IsRequired();
-            builder.Property(x => x.Month);
-            builder.Property(x => x.Year);
+            builder.Property(x => x.Month).IsRequired(false);
+            builder.Property(x => x.Year).IsRequired(false);
             builder.Property(x => x.SellingAvailability).IsRequired().HasDefaultValue(ESellingAvailability.Available);
             builder.Property(x => x.Visible).IsRequired().HasDefaultValue(EVisible.IsVisible);
             builder.Property(x => x.Moderation).IsRequired().HasDefaultValue(EModeration.Moderated);

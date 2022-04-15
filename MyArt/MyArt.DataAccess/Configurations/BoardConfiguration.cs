@@ -16,7 +16,7 @@ namespace MyArt.DataAccess.Configurations
             builder.Property(x => x.Id).ValueGeneratedOnAdd();
             builder.Property(x => x.Name).IsRequired();
             builder.Property(x => x.Visible).IsRequired().HasDefaultValue(EVisible.IsVisible);
-            builder.Property(x => x.ShareCount);
+            builder.Property(x => x.ShareCount).IsRequired(false);
             builder.Property(x => x.Date).IsRequired().HasDefaultValue(DateTime.Now);
 
             builder.HasOne(x => x.User).WithMany(x => x.Boards).HasForeignKey(x => x.UserId);

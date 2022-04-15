@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyArt.DataAccess;
 
@@ -11,9 +12,10 @@ using MyArt.DataAccess;
 namespace MyArt.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220415073221_FixDescriptionProp")]
+    partial class FixDescriptionProp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -41,14 +43,14 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 39, 24, 747, DateTimeKind.Local).AddTicks(8534));
+                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 32, 21, 529, DateTimeKind.Local).AddTicks(7727));
 
                     b.Property<int>("Moderation")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<int?>("Month")
+                    b.Property<int>("Month")
                         .HasColumnType("int");
 
                     b.Property<string>("MutedColor")
@@ -67,7 +69,7 @@ namespace MyArt.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<int?>("ShareCount")
+                    b.Property<int>("ShareCount")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
@@ -102,7 +104,7 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 39, 24, 747, DateTimeKind.Local).AddTicks(4557));
+                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 32, 21, 529, DateTimeKind.Local).AddTicks(3951));
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -188,13 +190,13 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 39, 24, 749, DateTimeKind.Local).AddTicks(3637));
+                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 32, 21, 531, DateTimeKind.Local).AddTicks(4326));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ShareCount")
+                    b.Property<int>("ShareCount")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -247,7 +249,7 @@ namespace MyArt.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("ExpirationDate")
+                    b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Moderation")
@@ -264,10 +266,10 @@ namespace MyArt.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(1);
 
-                    b.Property<DateTime?>("ReleaseDate")
+                    b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ShareCount")
+                    b.Property<int>("ShareCount")
                         .HasColumnType("int");
 
                     b.Property<int>("Visible")
@@ -291,7 +293,7 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 39, 24, 750, DateTimeKind.Local).AddTicks(479));
+                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 32, 21, 532, DateTimeKind.Local).AddTicks(907));
 
                     b.Property<string>("Text")
                         .IsRequired()
@@ -377,7 +379,7 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("ShareCount")
+                    b.Property<int>("ShareCount")
                         .HasColumnType("int");
 
                     b.Property<int>("Visible")
@@ -401,7 +403,7 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 39, 24, 751, DateTimeKind.Local).AddTicks(982));
+                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 32, 21, 533, DateTimeKind.Local).AddTicks(1149));
 
                     b.Property<string>("Text")
                         .IsRequired()

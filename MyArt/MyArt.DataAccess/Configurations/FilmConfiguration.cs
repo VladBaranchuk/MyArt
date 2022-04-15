@@ -19,7 +19,7 @@ namespace MyArt.DataAccess.Configurations
             builder.Property(x => x.Country).IsRequired();
             builder.Property(x => x.Duration).IsRequired();
             builder.Property(x => x.Producer).IsRequired();
-            builder.Property(x => x.ShareCount);
+            builder.Property(x => x.ShareCount).IsRequired(false);
             builder.Property(x => x.Visible).IsRequired().HasDefaultValue(EVisible.IsVisible);
             builder.Property(x => x.Announcement).IsRequired().HasDefaultValue(EAnnouncement.Announced);
             builder.Property(x => x.Release).IsRequired().HasDefaultValue(ERelease.NotRelease);

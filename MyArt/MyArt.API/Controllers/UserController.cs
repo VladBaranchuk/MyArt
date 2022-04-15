@@ -7,7 +7,7 @@ using MyArt.BusinessLogic.Contracts;
 
 namespace MyArt.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/user")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -35,7 +35,7 @@ namespace MyArt.API.Controllers
         }
 
         [Authorize]
-        [Route("Info")]
+        [Route("info")]
         [HttpPost(Name = nameof(GetUserInfo))]
         public async Task<ActionResult<ShortUserInfoViewModel>> GetUserInfo()
         {
@@ -45,7 +45,7 @@ namespace MyArt.API.Controllers
             return Ok(result);
         }
 
-        [Route("Signup")]
+        [Route("signup")]
         [HttpPost(Name = nameof(SignUp))]
         public async Task<IActionResult> SignUp(RegisterViewModel registerVM)
         {
@@ -57,7 +57,7 @@ namespace MyArt.API.Controllers
             return Ok();
         }
 
-        [Route("Signin")]
+        [Route("signin")]
         [HttpPost(Name = nameof(SignIn))]
         public async Task<ActionResult> SignIn(AuthenticationViewModel authVM)
         {

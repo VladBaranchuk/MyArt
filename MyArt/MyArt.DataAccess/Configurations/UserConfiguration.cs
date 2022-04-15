@@ -17,7 +17,7 @@ namespace MyArt.DataAccess.Configurations
             builder.Property(x => x.LastName).IsRequired();
             builder.Property(x => x.Email).IsRequired();
             builder.Property(x => x.PasswordHash).IsRequired();
-            builder.Property(x => x.Description);
+            builder.Property(x => x.Description).IsRequired(false);
         }
     }
 }

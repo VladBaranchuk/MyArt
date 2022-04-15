@@ -11,7 +11,7 @@ namespace MyArt.Domain.Entities
         public int Country { get; set; }
         public string Duration { get; set; }
         public string Producer { get; set; }
-        public int ShareCount { get; set; }
+        public int? ShareCount { get; set; }
         public EVisible Visible { get; set; }
         public EAnnouncement Announcement { get; set; }
         public ERelease Release { get; set; }
