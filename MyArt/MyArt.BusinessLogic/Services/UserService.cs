@@ -74,7 +74,7 @@ namespace MyArt.BusinessLogic.Services
 
                 var userVM = _mapper.Map<User, UserViewModel>(user);
 
-                var verifyPasswordHash = BCrypt.Net.BCrypt.Verify(authVM.Password, userVM.Password);
+                var verifyPasswordHash = BCrypt.Net.BCrypt.Verify(authVM.Password, userVM.PasswordHash);
 
                 if (verifyPasswordHash)
                 {
