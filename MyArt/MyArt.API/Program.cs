@@ -21,7 +21,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddDbContext<AppDbContext>(options =>
         options.UseSqlServer(builder.Configuration.GetConnectionString("SqlConnection")));
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddTransient<IDataContext, DataContext>();
+builder.Services.AddScoped<IDataContext, DataContext>();
 
 builder.Configuration.GetSection("JwtOptions").Bind(jwtConfig);
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
@@ -45,9 +45,10 @@ builder.Services.AddDataAccess();
 builder.Services.AddMappings();
 builder.Services.AddValidators();
 
+builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
-builder.Services.AddScoped<IJwtService, JwtService>();
+
 
 builder.Services.AddCors(options =>
 {

@@ -22,6 +22,8 @@ namespace MyArt.BusinessLogic.Mappings
                    dest => dest.Role,
                    opt => opt.MapFrom(x => x.RoleToUsers[0].Role.Name)
                );
+
+            CreateMap<User, UpdatePublicUserInfoViewModel>();
         }
     }
 }

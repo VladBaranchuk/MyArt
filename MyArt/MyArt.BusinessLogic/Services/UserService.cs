@@ -14,18 +14,21 @@ namespace MyArt.BusinessLogic.Services
         private readonly IJwtService _jwtService;
         private readonly IUserProvider _userProvider;
         private readonly IUserRepository _userRepository;
+        private readonly ICurrentUserService _currentUserService;
         private readonly IMapper _mapper;
 
         public UserService(
             IDataContext context,
             IUserProvider userProvider,
             IUserRepository userRepository,
+            ICurrentUserService currentUserService,
             IJwtService jwtService,
             IMapper mapper)
         {
             _mapper = mapper;
             _userRepository = userRepository;
             _userProvider = userProvider;
+            _currentUserService = currentUserService;
             _jwtService = jwtService;
             _db = context;
         }
@@ -83,6 +86,28 @@ namespace MyArt.BusinessLogic.Services
             }
 
             return jwt;
+        }
+        public async Task<UpdatePublicUserInfoViewModel> UpdatePublicUserInfoAsync(UpdatePublicUserInfoViewModel infoVM, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            var user = await _userProvider.GetItemByIdAsync(userId, cancellationToken);
+
+            if (user == null)
+            {
+                throw new ApplicationException($"User with id {infoVM.Id} not found");
+            }
+
+            user.FirstName = infoVM.FirstName;
+            user.LastName = infoVM.LastName;
+            user.Description = infoVM.Description;
+
+            await _userRepository.UpdateAsync(user, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
+
+            var updatePublicUserInfoViewModel = _mapper.Map<User, UpdatePublicUserInfoViewModel>(user);
+
+            return updatePublicUserInfoViewModel;
         }
     }
 }

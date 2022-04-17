@@ -16,8 +16,6 @@ namespace MyArt.API.Infrastructure.Configurations
     {
         public static IServiceCollection AddDataAccess(this IServiceCollection services)
         {
-            services.AddScoped<IDataProvider, DataProvider>();
-
             // IRepository
             services.AddScoped<IRepository<ArtForm>, ArtFormRepository>();
             services.AddScoped<IArtFormRepository, ArtFormRepository>();
@@ -53,6 +51,8 @@ namespace MyArt.API.Infrastructure.Configurations
             services.AddScoped<IRoleProvider, RoleProvider>();
             services.AddScoped<IProvider<User>, UserProvider>();
             services.AddScoped<IUserProvider, UserProvider>();
+
+            services.AddScoped<IDataProvider, DataProvider>();
 
             return services;
         }

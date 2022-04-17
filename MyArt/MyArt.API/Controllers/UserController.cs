@@ -59,7 +59,7 @@ namespace MyArt.API.Controllers
 
         [Route("signin")]
         [HttpPost(Name = nameof(SignIn))]
-        public async Task<ActionResult> SignIn(AuthenticationViewModel authVM)
+        public async Task<ActionResult<JwtResponse>> SignIn(AuthenticationViewModel authVM)
         {
             _authValidator.ValidateAndThrow(authVM);
 
@@ -67,6 +67,19 @@ namespace MyArt.API.Controllers
             var jwt = await _userService.AuthenticateAsync(authVM, cancellationToken);
 
             return Ok(new JwtResponse { Token = jwt });
+        }
+
+        [Authorize]
+        [Route("{id}")]
+        [HttpPut(Name = nameof(UpdatePublicUserInfo))]
+        public async Task<ActionResult<UpdatePublicUserInfoViewModel>> UpdatePublicUserInfo(UpdatePublicUserInfoViewModel updatePublicUserInfoVM)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _userService.UpdatePublicUserInfoAsync(updatePublicUserInfoVM, cancellationToken);
+
+            return Ok(result);
         }
     }
 }
