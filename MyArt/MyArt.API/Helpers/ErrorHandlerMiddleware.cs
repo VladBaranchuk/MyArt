@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using System.Net;
+using System.Text.Json;
+using System.Net.Mime;
 using MyArt.API.Infrastructure.Models;
 using MyArt.BusinessLogic.Models;
-using System.Net;
-using System.Net.Mime;
-using System.Text.Json;
 
 namespace MyArt.API.Helpers
 {

@@ -31,6 +31,8 @@ namespace MyArt.API.Infrastructure.Configurations
             services.AddScoped<IFilmRepository, FilmRepository>();
             services.AddScoped<IRepository<Genre>, GenreRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IRepository<Role>, RoleRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRepository<User>, UserRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
 
@@ -47,6 +49,8 @@ namespace MyArt.API.Infrastructure.Configurations
             services.AddScoped<IFilmProvider, FilmProvider>();
             services.AddScoped<IProvider<Genre>, GenreProvider>();
             services.AddScoped<IGenreProvider, GenreProvider>();
+            services.AddScoped<IProvider<Role>, RoleProvider>();
+            services.AddScoped<IRoleProvider, RoleProvider>();
             services.AddScoped<IProvider<User>, UserProvider>();
             services.AddScoped<IUserProvider, UserProvider>();
 
@@ -57,6 +61,7 @@ namespace MyArt.API.Infrastructure.Configurations
             services.AddAutoMapper(x =>
             {
                 x.AddProfile<UserProfile>();
+                x.AddProfile<FluentFailureProfile>();
             });
 
             return services;
