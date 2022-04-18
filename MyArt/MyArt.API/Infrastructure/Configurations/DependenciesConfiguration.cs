@@ -62,6 +62,7 @@ namespace MyArt.API.Infrastructure.Configurations
             {
                 x.AddProfile<UserProfile>();
                 x.AddProfile<FluentFailureProfile>();
+                x.AddProfile<FilmProfile>();
             });
 
             return services;

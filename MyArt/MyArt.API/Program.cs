@@ -48,6 +48,7 @@ builder.Services.AddValidators();
 builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IFilmService, FilmService>();
 
 
 builder.Services.AddCors(options =>
