@@ -3,7 +3,7 @@ namespace MyArt.Domain.Enums
 {
     public enum ERole
     {
-        Guest,
+        Guest = 1,
         User,
         Moderator
     }

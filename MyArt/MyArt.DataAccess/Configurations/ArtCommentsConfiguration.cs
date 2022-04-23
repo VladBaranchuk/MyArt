@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MyArt.Domain.Entities;
-using System;
 
 namespace MyArt.DataAccess.Configurations
 {
@@ -11,11 +10,10 @@ namespace MyArt.DataAccess.Configurations
         {
             builder.ToTable("ArtComments");
 
-            builder.HasKey(x => new { x.UserId, x.ArtId });
-            builder.Property(x => x.Text).IsRequired();
-            builder.Property(x => x.Date).IsRequired().HasDefaultValue(DateTime.Now);
+            builder.HasKey(x => new { x.UserId, x.ArtId, x.CommentId });
 
             builder.HasOne(x => x.Art).WithMany(x => x.ArtComments).HasForeignKey(x => x.ArtId);
+            builder.HasOne(x => x.Comment).WithMany(x => x.ArtComments).HasForeignKey(x => x.CommentId);
             builder.HasOne(x => x.User).WithMany(x => x.ArtComments).HasForeignKey(x => x.UserId).OnDelete(DeleteBehavior.NoAction);
         }
     }

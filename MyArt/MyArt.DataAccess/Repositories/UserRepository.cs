@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MyArt.DataAccess.Contracts;
+﻿using MyArt.DataAccess.Contracts;
 using MyArt.DataAccess.Contracts.Repositories;
 using MyArt.Domain.Entities;
 using MyArt.Domain.Enums;

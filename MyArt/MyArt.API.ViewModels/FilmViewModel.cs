@@ -14,6 +14,7 @@ namespace MyArt.API.ViewModels
         public int? ShareCount { get; set; }
         public int LikesCount { get; set; }
         public int CommentsCount { get; set; }
+        public bool HasLiked { get; set; }
         public List<CommentViewModel> Comments { get; set; }
     }
 }

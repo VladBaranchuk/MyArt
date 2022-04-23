@@ -44,19 +44,18 @@ namespace MyArt.DataAccess.Providers
         public async Task<List<CommentViewModel>> GetCommentsByIdAsync(int id, CancellationToken cancellationToken)
         {
             var query = _filmCommentsEntities
-                .Where(x => x.FilmId == id)
-                .OrderByDescending(x => x.Date);
+                .Where(x => x.FilmId == id);
 
             var result = await _mapper.ProjectTo<CommentViewModel>(query).ToListAsync(cancellationToken);
             return result;
         }
         public async Task<bool> HasLikedFilmByIdAsync(int userId, int filmId, CancellationToken cancellationToken)
         {
-            var hasLike = await _likeFilmsEntities
+            var hasLiked = await _likeFilmsEntities
                 .Where(x => x.FilmId == filmId)
                 .AnyAsync(x => x.UserId == userId, cancellationToken);
 
-            return hasLike;
+            return hasLiked;
         }
     }
 }

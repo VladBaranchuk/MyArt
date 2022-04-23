@@ -11,11 +11,10 @@ namespace MyArt.DataAccess.Configurations
         {
             builder.ToTable("ExhibitionComments");
 
-            builder.HasKey(x => new { x.UserId, x.ExhibitionId });
-            builder.Property(x => x.Text).IsRequired();
-            builder.Property(x => x.Date).IsRequired().HasDefaultValue(DateTime.Now);
+            builder.HasKey(x => new { x.UserId, x.ExhibitionId, x.CommentId });
 
             builder.HasOne(x => x.User).WithMany(x => x.ExhibitionComments).HasForeignKey(x => x.UserId);
+            builder.HasOne(x => x.Comment).WithMany(x =>x.ExhibitionComments).HasForeignKey(x => x.CommentId);  
             builder.HasOne(x => x.Exhibition).WithMany(x => x.ExhibitionComments).HasForeignKey(x => x.ExhibitionId);
         }
     }

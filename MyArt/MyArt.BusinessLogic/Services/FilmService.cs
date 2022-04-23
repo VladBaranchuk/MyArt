@@ -5,6 +5,7 @@ using MyArt.DataAccess.Contracts;
 using MyArt.DataAccess.Contracts.Providers;
 using MyArt.DataAccess.Contracts.Repositories;
 using MyArt.Domain.Entities;
+using MyArt.Domain.Enums;
 
 namespace MyArt.BusinessLogic.Services
 {
@@ -30,12 +31,15 @@ namespace MyArt.BusinessLogic.Services
             _mapper = mapper;
         }
 
-        public async Task<FilmViewModel> GetFilmById(int filmId, CancellationToken cancellationToken)
+        public async Task<FilmViewModel> GetFilmByIdAsync(int filmId, CancellationToken cancellationToken)
         {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
             var film = await _filmProvider.GetItemByIdAsync(filmId, cancellationToken);
             var likesCount = await _filmProvider.GetLikesCountByIdAsync(filmId, cancellationToken);
             var commentsCount = await _filmProvider.GetCommentsCountByIdAsync(filmId, cancellationToken);
             var comments = await _filmProvider.GetCommentsByIdAsync(filmId, cancellationToken);
+            var hasLiked = await _filmProvider.HasLikedFilmByIdAsync(userId, filmId, cancellationToken);
 
             var filmViewModel = new FilmViewModel()
             {
@@ -50,16 +54,40 @@ namespace MyArt.BusinessLogic.Services
                 ShareCount = film.ShareCount,
                 LikesCount = likesCount,
                 CommentsCount = commentsCount,
+                HasLiked = hasLiked,
                 Comments = comments
             };
 
             return filmViewModel;  
         }
-        public async Task SetLikeById(int filmId, CancellationToken cancellationToken)
+        public async Task<FilmViewModel> AddFilmAsync(CreateFilmViewModel createFilmVM, CancellationToken cancellationToken)
+        {
+            var newFilm = new Film()
+            {
+                Name = createFilmVM.Name,
+                Description = createFilmVM?.Description,
+                Price = createFilmVM.Price,
+                Country = createFilmVM.Country,
+                Duration = createFilmVM.Duration,
+                Producer = createFilmVM.Producer,
+                Visible = (EVisible)createFilmVM.Visible,
+                Announcement = (EAnnouncement)createFilmVM.Announcement,
+                Release = (ERelease)createFilmVM.Release,
+                ReleaseDate = createFilmVM.ReleaseDate
+            };
+
+            await _filmRepository.CreateAsync(newFilm, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
+
+            var filmVM = _mapper.Map<Film, FilmViewModel>(newFilm);
+
+            return filmVM;
+        }
+        public async Task AddLikeByIdAsync(int filmId, CancellationToken cancellationToken)
         {
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
 
-            var hasLike = await _filmProvider.HasLikedFilmByIdAsync(userId, filmId, cancellationToken);
+            var hasLiked = await _filmProvider.HasLikedFilmByIdAsync(userId, filmId, cancellationToken);
 
             var like = new LikeFilms()
             {
@@ -67,15 +95,28 @@ namespace MyArt.BusinessLogic.Services
                 FilmId = filmId
             };
 
-            if (hasLike)
+            if (hasLiked)
             {
-                await _filmRepository.RemoveLike(like, cancellationToken);
+                await _filmRepository.RemoveLikeAsync(like, cancellationToken);
             }
             else
             {
-                await _filmRepository.SetLike(like, cancellationToken);
+                await _filmRepository.AddLikeAsync(like, cancellationToken);
             }
 
+            await _db.SaveChangesAsync(cancellationToken);
+        }
+        public async Task AddCommentByIdAsync(CreateFilmCommentViewModel comment, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            FilmComments filmComments = new FilmComments()
+            {
+                UserId = userId,
+                FilmId = comment.FilmId,
+            };
+
+            await _filmRepository.AddCommentAsync(filmComments, cancellationToken);
             await _db.SaveChangesAsync(cancellationToken);
         }
     }

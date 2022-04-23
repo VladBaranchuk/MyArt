@@ -23,6 +23,20 @@ namespace MyArt.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Comment",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Comment", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Exhibition",
                 columns: table => new
                 {
@@ -31,9 +45,9 @@ namespace MyArt.DataAccess.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     AnnounceDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ShareCount = table.Column<int>(type: "int", nullable: false),
+                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ShareCount = table.Column<int>(type: "int", nullable: true),
                     Visible = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Moderation = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
                     Announcement = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
@@ -53,10 +67,10 @@ namespace MyArt.DataAccess.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<int>(type: "int", nullable: false),
-                    Country = table.Column<int>(type: "int", nullable: false),
+                    Country = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Duration = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Producer = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ShareCount = table.Column<int>(type: "int", nullable: false),
+                    ShareCount = table.Column<int>(type: "int", nullable: true),
                     Visible = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Announcement = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Release = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
@@ -104,7 +118,7 @@ namespace MyArt.DataAccess.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -169,15 +183,15 @@ namespace MyArt.DataAccess.Migrations
                     BrightColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     MutedColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     DarkColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ShareCount = table.Column<int>(type: "int", nullable: false),
+                    ShareCount = table.Column<int>(type: "int", nullable: true),
                     Price = table.Column<int>(type: "int", nullable: false),
-                    Month = table.Column<int>(type: "int", nullable: false),
-                    Year = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Month = table.Column<int>(type: "int", nullable: true),
+                    Year = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     SellingAvailability = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Visible = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Moderation = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 4, 8, 16, 33, 58, 121, DateTimeKind.Local).AddTicks(6985)),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 4, 23, 17, 24, 49, 211, DateTimeKind.Local).AddTicks(2993)),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -199,8 +213,8 @@ namespace MyArt.DataAccess.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Visible = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
-                    ShareCount = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 4, 8, 16, 33, 58, 123, DateTimeKind.Local).AddTicks(1336)),
+                    ShareCount = table.Column<int>(type: "int", nullable: true),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 4, 23, 17, 24, 49, 212, DateTimeKind.Local).AddTicks(6290)),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -244,12 +258,17 @@ namespace MyArt.DataAccess.Migrations
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
                     ExhibitionId = table.Column<int>(type: "int", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 4, 8, 16, 33, 58, 123, DateTimeKind.Local).AddTicks(7847))
+                    CommentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ExhibitionComments", x => new { x.UserId, x.ExhibitionId });
+                    table.PrimaryKey("PK_ExhibitionComments", x => new { x.UserId, x.ExhibitionId, x.CommentId });
+                    table.ForeignKey(
+                        name: "FK_ExhibitionComments_Comment_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "Comment",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_ExhibitionComments_Exhibition_ExhibitionId",
                         column: x => x.ExhibitionId,
@@ -270,12 +289,16 @@ namespace MyArt.DataAccess.Migrations
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
                     FilmId = table.Column<int>(type: "int", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 4, 8, 16, 33, 58, 124, DateTimeKind.Local).AddTicks(7912))
+                    CommentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FilmComments", x => new { x.UserId, x.FilmId });
+                    table.PrimaryKey("PK_FilmComments", x => new { x.UserId, x.FilmId, x.CommentId });
+                    table.ForeignKey(
+                        name: "FK_FilmComments_Comment_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "Comment",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_FilmComments_Film_FilmId",
                         column: x => x.FilmId,
@@ -368,16 +391,21 @@ namespace MyArt.DataAccess.Migrations
                 {
                     UserId = table.Column<int>(type: "int", nullable: false),
                     ArtId = table.Column<int>(type: "int", nullable: false),
-                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 4, 8, 16, 33, 58, 121, DateTimeKind.Local).AddTicks(3502))
+                    CommentId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ArtComments", x => new { x.UserId, x.ArtId });
+                    table.PrimaryKey("PK_ArtComments", x => new { x.UserId, x.ArtId, x.CommentId });
                     table.ForeignKey(
                         name: "FK_ArtComments_Art_ArtId",
                         column: x => x.ArtId,
                         principalTable: "Art",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ArtComments_Comment_CommentId",
+                        column: x => x.CommentId,
+                        principalTable: "Comment",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
@@ -539,6 +567,11 @@ namespace MyArt.DataAccess.Migrations
                 column: "ArtId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ArtComments_CommentId",
+                table: "ArtComments",
+                column: "CommentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ArtFormToArt_ArtId",
                 table: "ArtFormToArt",
                 column: "ArtId");
@@ -564,6 +597,11 @@ namespace MyArt.DataAccess.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ExhibitionComments_CommentId",
+                table: "ExhibitionComments",
+                column: "CommentId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_ExhibitionComments_ExhibitionId",
                 table: "ExhibitionComments",
                 column: "ExhibitionId");
@@ -577,6 +615,11 @@ namespace MyArt.DataAccess.Migrations
                 name: "IX_ExhibitionToArtForm_ArtFormId",
                 table: "ExhibitionToArtForm",
                 column: "ArtFormId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FilmComments_CommentId",
+                table: "FilmComments",
+                column: "CommentId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_FilmComments_FilmId",
@@ -663,6 +706,9 @@ namespace MyArt.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "ArtForm");
+
+            migrationBuilder.DropTable(
+                name: "Comment");
 
             migrationBuilder.DropTable(
                 name: "Genre");

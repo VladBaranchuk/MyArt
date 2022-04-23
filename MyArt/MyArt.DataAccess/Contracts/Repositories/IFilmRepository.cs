@@ -6,7 +6,8 @@ namespace MyArt.DataAccess.Contracts.Repositories
 {
     public interface IFilmRepository : IRepository<Film>
     {
-        Task SetLike(LikeFilms likeFilms, CancellationToken cancellationToken);
-        Task RemoveLike(LikeFilms likeFilms, CancellationToken cancellationToken);
+        Task AddLikeAsync(LikeFilms likeFilms, CancellationToken cancellationToken);
+        Task RemoveLikeAsync(LikeFilms likeFilms, CancellationToken cancellationToken);
+        Task AddCommentAsync(FilmComments comment, CancellationToken cancellationToken);
     }
 }

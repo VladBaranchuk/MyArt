@@ -12,8 +12,8 @@ using MyArt.DataAccess;
 namespace MyArt.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220415073221_FixDescriptionProp")]
-    partial class FixDescriptionProp
+    [Migration("20220423142449_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -43,14 +43,14 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 32, 21, 529, DateTimeKind.Local).AddTicks(7727));
+                        .HasDefaultValue(new DateTime(2022, 4, 23, 17, 24, 49, 211, DateTimeKind.Local).AddTicks(2993));
 
                     b.Property<int>("Moderation")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<int>("Month")
+                    b.Property<int?>("Month")
                         .HasColumnType("int");
 
                     b.Property<string>("MutedColor")
@@ -69,7 +69,7 @@ namespace MyArt.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<int>("ShareCount")
+                    b.Property<int?>("ShareCount")
                         .HasColumnType("int");
 
                     b.Property<int>("Type")
@@ -101,18 +101,14 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<int>("ArtId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 32, 21, 529, DateTimeKind.Local).AddTicks(3951));
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId", "ArtId");
+                    b.HasKey("UserId", "ArtId", "CommentId");
 
                     b.HasIndex("ArtId");
+
+                    b.HasIndex("CommentId");
 
                     b.ToTable("ArtComments", (string)null);
                 });
@@ -190,13 +186,13 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 32, 21, 531, DateTimeKind.Local).AddTicks(4326));
+                        .HasDefaultValue(new DateTime(2022, 4, 23, 17, 24, 49, 212, DateTimeKind.Local).AddTicks(6290));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ShareCount")
+                    b.Property<int?>("ShareCount")
                         .HasColumnType("int");
 
                     b.Property<int>("UserId")
@@ -229,6 +225,26 @@ namespace MyArt.DataAccess.Migrations
                     b.ToTable("BoughtFilms", (string)null);
                 });
 
+            modelBuilder.Entity("MyArt.Domain.Entities.Comment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Comment", (string)null);
+                });
+
             modelBuilder.Entity("MyArt.Domain.Entities.Exhibition", b =>
                 {
                     b.Property<int>("Id")
@@ -249,7 +265,7 @@ namespace MyArt.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ExpirationDate")
+                    b.Property<DateTime?>("ExpirationDate")
                         .HasColumnType("datetime2");
 
                     b.Property<int>("Moderation")
@@ -266,10 +282,10 @@ namespace MyArt.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(1);
 
-                    b.Property<DateTime>("ReleaseDate")
+                    b.Property<DateTime?>("ReleaseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ShareCount")
+                    b.Property<int?>("ShareCount")
                         .HasColumnType("int");
 
                     b.Property<int>("Visible")
@@ -290,16 +306,12 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<int>("ExhibitionId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 32, 21, 532, DateTimeKind.Local).AddTicks(907));
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("UserId", "ExhibitionId", "CommentId");
 
-                    b.HasKey("UserId", "ExhibitionId");
+                    b.HasIndex("CommentId");
 
                     b.HasIndex("ExhibitionId");
 
@@ -349,8 +361,9 @@ namespace MyArt.DataAccess.Migrations
                         .HasColumnType("int")
                         .HasDefaultValue(0);
 
-                    b.Property<int>("Country")
-                        .HasColumnType("int");
+                    b.Property<string>("Country")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -379,7 +392,7 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
 
-                    b.Property<int>("ShareCount")
+                    b.Property<int?>("ShareCount")
                         .HasColumnType("int");
 
                     b.Property<int>("Visible")
@@ -400,16 +413,12 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<int>("FilmId")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("Date")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 4, 15, 10, 32, 21, 533, DateTimeKind.Local).AddTicks(1149));
+                    b.Property<int>("CommentId")
+                        .HasColumnType("int");
 
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.HasKey("UserId", "FilmId", "CommentId");
 
-                    b.HasKey("UserId", "FilmId");
+                    b.HasIndex("CommentId");
 
                     b.HasIndex("FilmId");
 
@@ -595,6 +604,12 @@ namespace MyArt.DataAccess.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MyArt.Domain.Entities.Comment", "Comment")
+                        .WithMany("ArtComments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MyArt.Domain.Entities.User", "User")
                         .WithMany("ArtComments")
                         .HasForeignKey("UserId")
@@ -602,6 +617,8 @@ namespace MyArt.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Art");
+
+                    b.Navigation("Comment");
 
                     b.Navigation("User");
                 });
@@ -695,6 +712,12 @@ namespace MyArt.DataAccess.Migrations
 
             modelBuilder.Entity("MyArt.Domain.Entities.ExhibitionComments", b =>
                 {
+                    b.HasOne("MyArt.Domain.Entities.Comment", "Comment")
+                        .WithMany("ExhibitionComments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MyArt.Domain.Entities.Exhibition", "Exhibition")
                         .WithMany("ExhibitionComments")
                         .HasForeignKey("ExhibitionId")
@@ -706,6 +729,8 @@ namespace MyArt.DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Comment");
 
                     b.Navigation("Exhibition");
 
@@ -752,6 +777,12 @@ namespace MyArt.DataAccess.Migrations
 
             modelBuilder.Entity("MyArt.Domain.Entities.FilmComments", b =>
                 {
+                    b.HasOne("MyArt.Domain.Entities.Comment", "Comment")
+                        .WithMany("FilmComments")
+                        .HasForeignKey("CommentId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("MyArt.Domain.Entities.Film", "Film")
                         .WithMany("FilmComments")
                         .HasForeignKey("FilmId")
@@ -763,6 +794,8 @@ namespace MyArt.DataAccess.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Comment");
 
                     b.Navigation("Film");
 
@@ -912,6 +945,15 @@ namespace MyArt.DataAccess.Migrations
                     b.Navigation("ArtToBoards");
 
                     b.Navigation("LikeBoards");
+                });
+
+            modelBuilder.Entity("MyArt.Domain.Entities.Comment", b =>
+                {
+                    b.Navigation("ArtComments");
+
+                    b.Navigation("ExhibitionComments");
+
+                    b.Navigation("FilmComments");
                 });
 
             modelBuilder.Entity("MyArt.Domain.Entities.Exhibition", b =>
