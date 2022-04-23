@@ -49,7 +49,7 @@ namespace MyArt.API.Controllers
         [Authorize]
         [Route("comment")]
         [HttpPut(Name = nameof(AddCommentById))]
-        public async Task<IActionResult> AddCommentById(CreateFilmCommentViewModel comment)
+        public async Task<IActionResult> AddCommentById(CreateCommentViewModel comment)
         {
             //_authValidator.ValidateAndThrow(authVM);
 

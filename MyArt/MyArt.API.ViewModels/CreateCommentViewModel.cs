@@ -1,9 +1,9 @@
 ﻿
 namespace MyArt.API.ViewModels
 {
-    public class CreateFilmCommentViewModel
+    public class CreateCommentViewModel
     {
-        public int FilmId { get; set; }
+        public int Id { get; set; }
         public string Text { get; set; }
     }
 }

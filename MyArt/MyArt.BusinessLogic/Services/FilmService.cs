@@ -14,18 +14,21 @@ namespace MyArt.BusinessLogic.Services
         private readonly IDataContext _db;
         private readonly IFilmProvider _filmProvider;
         private readonly IFilmRepository _filmRepository;
+        private readonly ICommentRepository _commentRepository;
         private readonly ICurrentUserService _currentUserService;
         private readonly IMapper _mapper;
 
         public FilmService(
             IDataContext db,
             IFilmRepository filmRepository,
+            ICommentRepository commentRepository,
             IFilmProvider filmProvider,
             ICurrentUserService currentUserService,
             IMapper mapper)
         {
             _db = db;
             _filmProvider = filmProvider;
+            _commentRepository = commentRepository;
             _currentUserService = currentUserService;
             _filmRepository = filmRepository;
             _mapper = mapper;
@@ -106,14 +109,23 @@ namespace MyArt.BusinessLogic.Services
 
             await _db.SaveChangesAsync(cancellationToken);
         }
-        public async Task AddCommentByIdAsync(CreateFilmCommentViewModel comment, CancellationToken cancellationToken)
+        public async Task AddCommentByIdAsync(CreateCommentViewModel comment, CancellationToken cancellationToken)
         {
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            var newComment = new Comment()
+            {
+                Text = comment.Text,
+                Date = DateTime.Now
+            };
+
+            await _commentRepository.CreateAsync(newComment, cancellationToken);
 
             FilmComments filmComments = new FilmComments()
             {
                 UserId = userId,
-                FilmId = comment.FilmId,
+                FilmId = comment.Id,
+                CommentId = newComment.Id
             };
 
             await _filmRepository.AddCommentAsync(filmComments, cancellationToken);
