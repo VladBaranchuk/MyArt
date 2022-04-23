@@ -4,6 +4,7 @@ namespace MyArt.BusinessLogic.Contracts
 {
     public interface IFilmService
     {
-        Task<FilmsDetailedInfoViewModel> GetFilmsDetailedInfoById(int id, CancellationToken cancellationToken);
+        Task<FilmViewModel> GetFilmById(int id, CancellationToken cancellationToken);
+        Task SetLikeById(int filmId, CancellationToken cancellationToken);
     }
 }

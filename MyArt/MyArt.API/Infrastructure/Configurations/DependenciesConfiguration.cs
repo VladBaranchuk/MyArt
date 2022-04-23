@@ -6,6 +6,7 @@ using MyArt.DataAccess;
 using MyArt.DataAccess.Contracts;
 using MyArt.DataAccess.Contracts.Providers;
 using MyArt.DataAccess.Contracts.Repositories;
+using MyArt.DataAccess.Mappings;
 using MyArt.DataAccess.Providers;
 using MyArt.DataAccess.Repositories;
 using MyArt.Domain.Entities;
@@ -63,6 +64,7 @@ namespace MyArt.API.Infrastructure.Configurations
                 x.AddProfile<UserProfile>();
                 x.AddProfile<FluentFailureProfile>();
                 x.AddProfile<FilmProfile>();
+                x.AddProfile<CommentProfile>();
             });
 
             return services;

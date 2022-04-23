@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyArt.API.ViewModels;
 using MyArt.BusinessLogic.Contracts;
@@ -27,9 +28,22 @@ namespace MyArt.API.Controllers
             //_authValidator.ValidateAndThrow(authVM);
 
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
-            var result = await _filmService.GetFilmsDetailedInfoById(id, cancellationToken);
+            var result = await _filmService.GetFilmById(id, cancellationToken);
 
             return Ok(result);
+        }
+
+        [Authorize]
+        [Route("like/{id}")]
+        [HttpPut(Name = nameof(SetLikeById))]
+        public async Task<IActionResult> SetLikeById(int id)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            await _filmService.SetLikeById(id, cancellationToken);
+
+            return Ok();
         }
     }
 }

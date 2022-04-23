@@ -1,6 +1,4 @@
-﻿
-
-namespace MyArt.API.ViewModels
+﻿namespace MyArt.API.ViewModels
 {
     public class CommentViewModel
     {
