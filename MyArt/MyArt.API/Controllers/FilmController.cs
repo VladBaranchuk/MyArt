@@ -23,7 +23,7 @@ namespace MyArt.API.Controllers
 
         [Route("{id}")]
         [HttpGet(Name = nameof(GetFilmById))]
-        public async Task<ActionResult<FilmsDetailedInfoViewModel>> GetFilmById(int id)
+        public async Task<ActionResult<FilmViewModel>> GetFilmById(int id)
         {
             //_authValidator.ValidateAndThrow(authVM);
 
@@ -33,10 +33,22 @@ namespace MyArt.API.Controllers
             return Ok(result);
         }
 
+        [Route("all")]
+        [HttpGet(Name = nameof(GetFilms))]
+        public async Task<ActionResult<ShortFilmViewModel>> GetFilms([FromQuery] int page = 0, [FromQuery] int size = 15)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _filmService.GetAllFilmsAsync(page, size, cancellationToken);
+
+            return Ok(result);
+        }
+
         [Authorize]
         [Route("like/{id}")]
-        [HttpPut(Name = nameof(AddLikeById))]
-        public async Task<IActionResult> AddLikeById(int id)
+        [HttpPut(Name = nameof(AddLikeToFilmById))]
+        public async Task<IActionResult> AddLikeToFilmById(int id)
         {
             //_authValidator.ValidateAndThrow(authVM);
 
@@ -48,8 +60,8 @@ namespace MyArt.API.Controllers
 
         [Authorize]
         [Route("comment")]
-        [HttpPut(Name = nameof(AddCommentById))]
-        public async Task<IActionResult> AddCommentById(CreateCommentViewModel comment)
+        [HttpPut(Name = nameof(AddCommentToFilmById))]
+        public async Task<IActionResult> AddCommentToFilmById(CreateCommentViewModel comment)
         {
             //_authValidator.ValidateAndThrow(authVM);
 

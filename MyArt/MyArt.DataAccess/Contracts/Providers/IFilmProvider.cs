@@ -12,5 +12,6 @@ namespace MyArt.DataAccess.Contracts.Providers
         Task<int> GetCommentsCountByIdAsync(int id, CancellationToken cancellationToken);
         Task<List<CommentViewModel>> GetCommentsByIdAsync(int id, CancellationToken cancellationToken);
         Task<bool> HasLikedFilmByIdAsync(int userId, int filmId, CancellationToken cancellationToken);
+        Task<List<ShortFilmViewModel>> GetAllItemsAsync(int page, int size, CancellationToken cancellationToken);
     }
 }

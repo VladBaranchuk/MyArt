@@ -1,0 +1,31 @@
+version: '3.4'
+
+services:
+  webapi:
+    image: ${DOCKER_REGISTRY-}myartapi:1.0
+    build:
+      context: ./../
+      dockerfile: MyArt.API/Dockerfile
+    env_file: .env
+    ports:
+      - 8080:80
+      - 8081:443
+    depends_on:
+      - mssql
+    volumes:
+      - .\\sertificates\:/https:ro
+
+  mssql:
+    container_name: mssql
+    env_file: .env
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+     - 1434:1433
+    environment:
+      ACCEPT_EULA: "Y"
+
+volumes:
+  webapi:
+    driver: local
+  db:
+    driver: local

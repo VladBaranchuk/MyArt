@@ -8,11 +8,7 @@ namespace MyArt.DataAccess.Mappings
     {
         public CommentProfile()
         {
-            CreateMap<FilmComments, CommentViewModel>()
-                .ForMember(
-                    dest => dest.Alias,
-                    opt => opt.MapFrom(x => x.User.Alias)
-                );
+            CreateMap<CommentViewModel, CommentViewModel>();
         }
     }
 }

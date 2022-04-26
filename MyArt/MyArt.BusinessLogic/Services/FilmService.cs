@@ -63,6 +63,12 @@ namespace MyArt.BusinessLogic.Services
 
             return filmViewModel;  
         }
+        public async Task<List<ShortFilmViewModel>> GetAllFilmsAsync(int page, int size, CancellationToken cancellationToken)
+        {
+            var films = await _filmProvider.GetAllItemsAsync(page, size, cancellationToken);
+
+            return films;
+        }
         public async Task<FilmViewModel> AddFilmAsync(CreateFilmViewModel createFilmVM, CancellationToken cancellationToken)
         {
             var newFilm = new Film()
@@ -116,7 +122,8 @@ namespace MyArt.BusinessLogic.Services
             var newComment = new Comment()
             {
                 Text = comment.Text,
-                Date = DateTime.Now
+                Date = DateTime.Now,
+                FilmComments = new List<FilmComments>()
             };
 
             await _commentRepository.CreateAsync(newComment, cancellationToken);
@@ -129,6 +136,9 @@ namespace MyArt.BusinessLogic.Services
             };
 
             await _filmRepository.AddCommentAsync(filmComments, cancellationToken);
+
+            newComment.FilmComments.Add(filmComments);
+            
             await _db.SaveChangesAsync(cancellationToken);
         }
     }

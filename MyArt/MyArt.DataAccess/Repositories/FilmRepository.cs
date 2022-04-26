@@ -2,6 +2,7 @@
 using MyArt.DataAccess.Contracts;
 using MyArt.DataAccess.Contracts.Repositories;
 using MyArt.Domain.Entities;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,7 +16,7 @@ namespace MyArt.DataAccess.Repositories
         public FilmRepository(IDataProvider dataProvider) : base(dataProvider)
         {
             _likeFilmsEntities = dataProvider.GetSet<LikeFilms>();
-            _filmCommentsEntities = dataProvider.GetSet<FilmComments>();    
+            _filmCommentsEntities = dataProvider.GetSet<FilmComments>(); 
         }
 
         public Task AddLikeAsync(LikeFilms likeFilms, CancellationToken cancellationToken)

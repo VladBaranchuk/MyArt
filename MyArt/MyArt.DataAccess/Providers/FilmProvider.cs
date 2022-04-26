@@ -16,6 +16,7 @@ namespace MyArt.DataAccess.Providers
         private readonly DbSet<Film> _filmEntities;
         private readonly DbSet<LikeFilms> _likeFilmsEntities;
         private readonly DbSet<FilmComments> _filmCommentsEntities;
+        private readonly DbSet<Comment> _commentEntities;
         private readonly IMapper _mapper;
 
         public FilmProvider(IDataProvider dataProvider, IMapper mapper) : base(dataProvider)
@@ -24,6 +25,7 @@ namespace MyArt.DataAccess.Providers
             _filmEntities = dataProvider.GetSet<Film>();
             _likeFilmsEntities = dataProvider.GetSet<LikeFilms>();
             _filmCommentsEntities = dataProvider.GetSet<FilmComments>();
+            _commentEntities = dataProvider.GetSet<Comment>();
         }
 
         public async override Task<Film> GetItemByIdAsync(int id, CancellationToken cancellationToken)
@@ -43,8 +45,18 @@ namespace MyArt.DataAccess.Providers
         }
         public async Task<List<CommentViewModel>> GetCommentsByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var query = _filmCommentsEntities
-                .Where(x => x.FilmId == id);
+            var commentIds = _filmCommentsEntities
+                .Where(x => x.FilmId == id)
+                .Select(x => x.CommentId);
+
+            var query = _commentEntities
+                .Where(x => commentIds.Contains(x.Id))
+                .Select(x => new CommentViewModel()
+                {
+                    Text = x.Text,
+                    Date = x.Date,
+                    Alias = x.FilmComments.Where(x => x.FilmId == id).Select(x => x.User.Alias).FirstOrDefault()
+                });
 
             var result = await _mapper.ProjectTo<CommentViewModel>(query).ToListAsync(cancellationToken);
             return result;
@@ -56,6 +68,25 @@ namespace MyArt.DataAccess.Providers
                 .AnyAsync(x => x.UserId == userId, cancellationToken);
 
             return hasLiked;
+        }
+        public async Task<List<ShortFilmViewModel>> GetAllItemsAsync(int page, int size, CancellationToken cancellationToken)
+        {
+            var query = _filmEntities
+                .OrderBy(x => x.Id)
+                .Skip(page * size)
+                .Take(size)
+                .Select(x => new ShortFilmViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Price = x.Price,
+                    Visible = (int)x.Visible,
+                    Announcement = (int)x.Announcement,
+                    Release = (int)x.Release,
+                    ReleaseDate = x.ReleaseDate
+                });
+
+            return await _mapper.ProjectTo<ShortFilmViewModel>(query).ToListAsync(cancellationToken);
         }
     }
 }

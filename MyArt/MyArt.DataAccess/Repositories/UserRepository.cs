@@ -25,7 +25,7 @@ namespace MyArt.DataAccess.Repositories
 
             _roleRepository.AddRoleToUserAsync(user, ERole.User, CancellationToken);
 
-            return base.CreateAsync(user, CancellationToken);
+            return Task.CompletedTask;
         }
     }
 }

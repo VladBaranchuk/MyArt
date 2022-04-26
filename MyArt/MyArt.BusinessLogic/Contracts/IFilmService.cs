@@ -8,6 +8,7 @@ namespace MyArt.BusinessLogic.Contracts
         Task AddLikeByIdAsync(int filmId, CancellationToken cancellationToken);
         Task AddCommentByIdAsync(CreateCommentViewModel comment, CancellationToken cancellationToken);
         Task<FilmViewModel> AddFilmAsync(CreateFilmViewModel createFilmVM, CancellationToken cancellationToken);
+        Task<List<ShortFilmViewModel>> GetAllFilmsAsync(int page, int size, CancellationToken cancellationToken);
 
     }
 }

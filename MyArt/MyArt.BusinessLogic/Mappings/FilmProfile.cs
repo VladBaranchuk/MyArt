@@ -9,6 +9,7 @@ namespace MyArt.BusinessLogic.Mappings
         public FilmProfile()
         {
             CreateMap<Film, FilmViewModel>();
+            CreateMap<ShortFilmViewModel, ShortFilmViewModel>();
         }
     }
 }

@@ -33,6 +33,36 @@ namespace MyArt.BusinessLogic.Services
             _db = context;
         }
 
+        public async Task<HeaderUserInfoViewModel> GetHeaderUserInfoAsync(CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            var user = await _userProvider.GetItemByIdAsync(userId, cancellationToken);
+            var paintingsCount = await _userProvider.GetPaintingsCountAsync(userId, cancellationToken);
+            var photosCount = await _userProvider.GetPhotosCountAsync(userId, cancellationToken);
+            var sculpturesCount = await _userProvider.GetSculpturesCountAsync(userId, cancellationToken);
+
+            var headerUserInfoVM = new HeaderUserInfoViewModel()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Alias = user.Alias,
+                PaintingsCount = paintingsCount,
+                PhotosCount = photosCount,
+                SculpturesCount = sculpturesCount
+            };
+
+            return headerUserInfoVM;
+        }
+        public async Task<string> GetAliasByIdAsync(int id, CancellationToken cancellationToken)
+        {
+            var user = await _userProvider.GetItemByIdAsync(id, cancellationToken);
+
+            var alias = user.Alias;
+
+            return alias;
+        }
         public async Task<UserViewModel> GetUserByIdAsync(int id, CancellationToken cancellationToken)
         {
             var user = await _userProvider.GetItemByIdAsync(id, cancellationToken);

@@ -34,6 +34,8 @@ namespace MyArt.API.Infrastructure.Configurations
             services.AddScoped<IRoleRepository, RoleRepository>();
             services.AddScoped<IRepository<User>, UserRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IRepository<Comment>, CommentRepository>();
+            services.AddScoped<ICommentRepository, CommentRepository>();
 
             // IProvider
             services.AddScoped<IProvider<ArtForm>, ArtFormProvider>();
@@ -52,6 +54,8 @@ namespace MyArt.API.Infrastructure.Configurations
             services.AddScoped<IRoleProvider, RoleProvider>();
             services.AddScoped<IProvider<User>, UserProvider>();
             services.AddScoped<IUserProvider, UserProvider>();
+            services.AddScoped<IProvider<Comment>, CommentProvider>();
+            services.AddScoped<ICommentProvider, CommentProvider>();
 
             services.AddScoped<IDataProvider, DataProvider>();
 
@@ -65,6 +69,7 @@ namespace MyArt.API.Infrastructure.Configurations
                 x.AddProfile<FluentFailureProfile>();
                 x.AddProfile<FilmProfile>();
                 x.AddProfile<CommentProfile>();
+                x.AddProfile<ArtProfile>();
             });
 
             return services;

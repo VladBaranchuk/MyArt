@@ -18,6 +18,7 @@ namespace MyArt.Domain.Entities
         public EModeration Moderation { get; set; }
         public EType Type { get; set; }
         public DateTime Date { get; set; }
+        public byte[] Data { get; set; }
         public int UserId { get; set; }
 
         public User User { get; set; }

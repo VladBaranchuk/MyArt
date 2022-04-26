@@ -45,6 +45,17 @@ namespace MyArt.API.Controllers
             return Ok(result);
         }
 
+        [Authorize]
+        [Route("headerInfo")]
+        [HttpPost(Name = nameof(GetHeaderUserInfo))]
+        public async Task<ActionResult<HeaderUserInfoViewModel>> GetHeaderUserInfo()
+        {
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _userService.GetHeaderUserInfoAsync(cancellationToken);
+
+            return Ok(result);
+        }
+
         [Route("signup")]
         [HttpPost(Name = nameof(SignUp))]
         public async Task<IActionResult> SignUp(RegisterViewModel registerVM)

@@ -8,6 +8,7 @@ using MyArt.BusinessLogic.Models;
 using MyArt.BusinessLogic.Services;
 using MyArt.DataAccess;
 using MyArt.DataAccess.Contracts;
+using System.Collections;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +16,19 @@ var builder = WebApplication.CreateBuilder(args);
 var jwtConfig = new JwtOptions();
 
 // Add services to the container.
+
+builder.Host.ConfigureAppConfiguration(config =>
+{
+    var prefix = "API_";
+    config.AddEnvironmentVariables(prefix);
+});
+
+Console.WriteLine(new String('=', 10));
+foreach (var key in Environment.GetEnvironmentVariables())
+{
+    var f = (DictionaryEntry)key;
+    Console.WriteLine("{0} = {1}", f.Key, f.Value);
+}
 
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
@@ -49,6 +63,7 @@ builder.Services.AddScoped<IJwtService, JwtService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IFilmService, FilmService>();
+builder.Services.AddScoped<IArtService, ArtService>();
 
 
 builder.Services.AddCors(options =>
