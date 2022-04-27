@@ -7,6 +7,7 @@ namespace MyArt.DataAccess.Contracts.Repositories
 {
     public interface IRoleRepository : IRepository<Role>
     {
-        public Task AddRoleToUserAsync(User user, ERole roleId, CancellationToken cancellationToken);
+        Task AddRolesAsync(CancellationToken cancellationToken);
+        Task AddRoleToUserAsync(User user, ERole roleId, CancellationToken cancellationToken);
     }
 }

@@ -64,6 +64,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 builder.Services.AddScoped<IFilmService, FilmService>();
 builder.Services.AddScoped<IArtService, ArtService>();
+builder.Services.AddScoped<IRoleService, RoleService>();
 
 
 builder.Services.AddCors(options =>

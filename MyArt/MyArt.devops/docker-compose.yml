@@ -23,9 +23,13 @@ services:
      - 1434:1433
     environment:
       ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+      SA_PASSWORD: "<YourStrong!Passw0rd>"
+    volumes:
+     - mssql:/var/opt/mssql
 
 volumes:
   webapi:
     driver: local
-  db:
+  mssql:
     driver: local
