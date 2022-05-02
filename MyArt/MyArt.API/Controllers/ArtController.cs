@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyArt.API.ViewModels;
 using MyArt.BusinessLogic.Contracts;
+using System.Net.Mime;
 
 namespace MyArt.API.Controllers
 {
@@ -71,25 +72,24 @@ namespace MyArt.API.Controllers
         }
 
         [Authorize]
+        [Route("upload")]
         [HttpPost(Name = nameof(AddArt))]
-        public async Task<ActionResult<FilmViewModel>> AddArt(CreateArtViewModel art)
-        {
-            //_authValidator.ValidateAndThrow(authVM);
-
-            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
-            var result = await _artService.AddArtAsync(art, cancellationToken);
-
-            return CreatedAtAction(nameof(GetArtById), new { id = result.Id }, result);
-        }
-
-        [Authorize]
-        [HttpPost(Name = nameof(UploadArt))]
-        public async Task<IActionResult> UploadArt([FromForm] CreateArtViewModel img)
+        public async Task<IActionResult> AddArt([FromForm] CreateArtViewModel img)
         {
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
-            await _artService.UploadArtAsync(img, cancellationToken);
+            await _artService.AddArtAsync(img, cancellationToken);
 
             return Ok();
+        }
+
+        [Route("image/{id}")]
+        [HttpGet(Name = nameof(GetImage))]
+        public async Task<ActionResult<byte[]>> GetImage(int id)
+        {
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _artService.GetImageAsync(id, cancellationToken);
+
+            return File(result, MediaTypeNames.Image.Jpeg);
         }
     }
 }

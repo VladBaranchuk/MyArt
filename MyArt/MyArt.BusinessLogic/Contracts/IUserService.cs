@@ -12,5 +12,6 @@ namespace MyArt.BusinessLogic.Contracts
         Task<UserViewModel> GetUserByIdAsync(int id, CancellationToken cancellationToken);
         Task<bool> HasAnyByEmailAsync(string email, CancellationToken cancellationToken);
         Task<UpdatePublicUserInfoViewModel> UpdatePublicUserInfoAsync(UpdatePublicUserInfoViewModel infoVM, CancellationToken cancellationToken);
+        Task<CabinetViewModel> GetCabinetAsync(CancellationToken cancellationToken);
     }
 }

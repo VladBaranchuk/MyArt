@@ -14,6 +14,7 @@ namespace MyArt.BusinessLogic.Services
         private readonly IJwtService _jwtService;
         private readonly IUserProvider _userProvider;
         private readonly IUserRepository _userRepository;
+        private readonly IArtProvider _artProvider;
         private readonly ICurrentUserService _currentUserService;
         private readonly IMapper _mapper;
 
@@ -21,11 +22,13 @@ namespace MyArt.BusinessLogic.Services
             IDataContext context,
             IUserProvider userProvider,
             IUserRepository userRepository,
+            IArtProvider artProvider,
             ICurrentUserService currentUserService,
             IJwtService jwtService,
             IMapper mapper)
         {
             _mapper = mapper;
+            _artProvider = artProvider;
             _userRepository = userRepository;
             _userProvider = userProvider;
             _currentUserService = currentUserService;
@@ -38,9 +41,9 @@ namespace MyArt.BusinessLogic.Services
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
 
             var user = await _userProvider.GetItemByIdAsync(userId, cancellationToken);
-            var paintingsCount = await _userProvider.GetPaintingsCountAsync(userId, cancellationToken);
-            var photosCount = await _userProvider.GetPhotosCountAsync(userId, cancellationToken);
-            var sculpturesCount = await _userProvider.GetSculpturesCountAsync(userId, cancellationToken);
+            var paintingsCount = await _artProvider.GetPaintingsCountAsync(userId, cancellationToken);
+            var photosCount = await _artProvider.GetPhotosCountAsync(userId, cancellationToken);
+            var sculpturesCount = await _artProvider.GetSculpturesCountAsync(userId, cancellationToken);
 
             var headerUserInfoVM = new HeaderUserInfoViewModel()
             {
@@ -78,6 +81,33 @@ namespace MyArt.BusinessLogic.Services
                 return false;
             }
             return await _userProvider.HasAnyByEmailAsync(email, cancellationToken);
+        }
+        public async Task<CabinetViewModel> GetCabinetAsync(CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            var user = await _userProvider.GetItemByIdAsync(userId, cancellationToken);
+
+            var paintingsCount = await _artProvider.GetPaintingsCountAsync(user.Id, cancellationToken);
+            var photosCount = await _artProvider.GetPhotosCountAsync(user.Id, cancellationToken);
+            var sculpturesCount = await _artProvider.GetSculpturesCountAsync(user.Id, cancellationToken);
+            var arts = await _artProvider.GetAllUserItemsAsync(user.Id, 0, 10, cancellationToken);
+
+            var cabinetVM = new CabinetViewModel()
+            {
+                Id = user.Id,
+                Alias = user.Alias,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PaintingsCount = paintingsCount,
+                PhotosCount = photosCount,
+                SculpturesCount = sculpturesCount,
+                Description = user.Description,
+                Arts = arts
+            };
+
+            return cabinetVM;
+
         }
         public async Task RegisterAsync(RegisterViewModel registerVM, CancellationToken cancellationToken)
         {

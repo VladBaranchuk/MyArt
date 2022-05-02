@@ -17,12 +17,14 @@ namespace MyArt.BusinessLogic.Services
         private readonly ICommentRepository _commentRepository;
         private readonly ICurrentUserService _currentUserService;
         private readonly IUserService _userService;
+        private readonly IColorService _colorService;
         private readonly IMapper _mapper;
 
         public ArtService(
             IDataContext db,
             IArtRepository artRepository,
             ICommentRepository commentRepository,
+            IColorService colorService,
             IArtProvider artProvider,
             IUserService userService,
             ICurrentUserService currentUserService,
@@ -31,16 +33,13 @@ namespace MyArt.BusinessLogic.Services
             _db = db;
             _userService = userService;
             _artProvider = artProvider;
+            _colorService = colorService;
             _commentRepository = commentRepository;
             _currentUserService = currentUserService;
             _artRepository = artRepository;
             _mapper = mapper;
         }
 
-        public async Task<ArtViewModel> AddArtAsync(CreateArtViewModel createArtVM, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
         public async Task AddCommentByIdAsync(CreateCommentViewModel comment, CancellationToken cancellationToken)
         {
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
@@ -100,14 +99,13 @@ namespace MyArt.BusinessLogic.Services
             var commentsCount = await _artProvider.GetCommentsCountByIdAsync(artId, cancellationToken);
             var comments = await _artProvider.GetCommentsByIdAsync(artId, cancellationToken);
             var hasLiked = await _artProvider.HasLikedArtByIdAsync(userId, artId, cancellationToken);
-            var arts = await _artProvider.GetAllItemsAsync(0, 10, cancellationToken);
+            var arts = await _artProvider.GetAllUserItemsAsync(userId, 0, 10, cancellationToken);
 
             var artViewModel = new ArtViewModel()
             {
                 Id = art.Id,
                 Alias = alias,
                 Name = art.Name,
-                
                 BrightColor = art.BrightColor,
                 DarkColor = art.DarkColor,
                 MutedColor = art.MutedColor,
@@ -134,7 +132,15 @@ namespace MyArt.BusinessLogic.Services
 
             return arts;
         }
-        public async Task UploadArtAsync(CreateArtViewModel createArtVM, CancellationToken cancellationToken)
+        public async Task<List<ShortArtViewModel>> GetAllUserArtsAsync(int page, int size, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            var arts = await _artProvider.GetAllUserItemsAsync(userId, page, size, cancellationToken);
+
+            return arts;
+        }
+        public async Task AddArtAsync(CreateArtViewModel createArtVM, CancellationToken cancellationToken)
         {
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
 
@@ -144,12 +150,14 @@ namespace MyArt.BusinessLogic.Services
                 artData = binaryReader.ReadBytes((int)createArtVM.Image.Length);
             }
 
+            var colors = _colorService.GetColorPalette(createArtVM.Image);
+
 
             Art art = new Art() {
                 Name = createArtVM.Name,
-                //BrightColor
-                //MutedColor
-                //DarkColor
+                BrightColor = colors[0],
+                MutedColor = colors[1],
+                DarkColor = colors[2],
                 ShareCount = 0,
                 Price = createArtVM.Price,
                 Month = (EMonth)createArtVM.Month,
@@ -165,6 +173,12 @@ namespace MyArt.BusinessLogic.Services
 
             await _artRepository.CreateAsync(art, cancellationToken);
             await _db.SaveChangesAsync(cancellationToken);
+        }
+        public async Task<byte[]> GetImageAsync(int artId, CancellationToken cancellationToken)
+        {
+            var bytes = await _artProvider.GetImageAsync(artId, cancellationToken);
+
+            return bytes;
         }
     }
 }

@@ -1,22 +1,25 @@
 ﻿using Microsoft.AspNetCore.Http;
+using MyArt.BusinessLogic.Contracts;
 using System.Drawing;
 
 namespace MyArt.BusinessLogic.Services
 {
-    public class ColorService
+    public class ColorService : IColorService
     {
-        public async Task<string> GetColorPaletteAsync(IFormFile img, CancellationToken cancellationToken)
+        public string[] GetColorPalette(IFormFile img)
         {
             Image image = Image.FromStream(img.OpenReadStream(), true, true);
 
             int thumbSize = 500;
+
             Dictionary<Color, int> colors = new Dictionary<Color, int>();
 
             Bitmap thumbBmp = new Bitmap(image);
+            
 
-            for (int i = 0; i < thumbSize; i++)
+            for (int i = 1; i < thumbBmp.Size.Width; i++)
             {
-                for (int j = 0; j < thumbSize; j++)
+                for (int j = 1; j < thumbBmp.Size.Height; j++)
                 {
                     Color col = thumbBmp.GetPixel(i, j);
                     if (colors.ContainsKey(col))
@@ -33,13 +36,13 @@ namespace MyArt.BusinessLogic.Services
                 return nextPair.Value.CompareTo(firstPair.Value);
             });
 
-            string top10Colors = "";
-            for (int i = 0; i < 10; i++)
+            var topColors = new string[3];
+            for (int i = 0; i < 3; i++)
             {
-                top10Colors += string.Format("\n {0}. {1} > {2}", i, keyValueList[i].Key.ToString(), keyValueList[i].Value);
+                topColors[i] = ColorTranslator.ToHtml(keyValueList[i].Key).ToString();
             }
 
-            return top10Colors;
+            return topColors;
         }
     }
 }

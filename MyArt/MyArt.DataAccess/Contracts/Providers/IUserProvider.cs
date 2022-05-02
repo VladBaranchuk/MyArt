@@ -8,8 +8,5 @@ namespace MyArt.DataAccess.Contracts.Providers
     {
         Task<User> GetItemByEmailAsync(string email, CancellationToken cancellationToken);
         Task<bool> HasAnyByEmailAsync(string email, CancellationToken cancellationToken);
-        Task<int> GetPaintingsCountAsync(int id, CancellationToken token);
-        Task<int> GetPhotosCountAsync(int id, CancellationToken token);
-        Task<int> GetSculpturesCountAsync(int id, CancellationToken token);
     }
 }

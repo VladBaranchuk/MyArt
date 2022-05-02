@@ -17,35 +17,13 @@ namespace MyArt.DataAccess.Providers
         {
             _userEntities = dataProvider.GetSet<User>();
         }
-
-        public Task<int> GetPaintingsCountAsync(int id, CancellationToken token)
-        {
-            return _userEntities
-                .Where(x => x.Id == id)
-                .Select(x => x.Arts.Where(x => x.Type == EType.Picture))
-                .CountAsync(token);
-        }
-        public Task<int> GetPhotosCountAsync(int id, CancellationToken token)
-        {
-            return _userEntities
-                .Where(x => x.Id == id)
-                .Select(x => x.Arts.Where(x => x.Type == EType.Photo))
-                .CountAsync(token);
-        }
-        public Task<int> GetSculpturesCountAsync(int id, CancellationToken token)
-        {
-            return _userEntities
-                .Where(x => x.Id == id)
-                .Select(x => x.Arts.Where(x => x.Type == EType.Sculpture))
-                .CountAsync(token);
-        }
         public override Task<User> GetItemByIdAsync(int id, CancellationToken token)
         {
             return _userEntities.Include(x => x.RoleToUsers).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Id == id);
         }
         public Task<User> GetItemByEmailAsync(string email, CancellationToken token)
         {
-            return _userEntities.Include(x => x.RoleToUsers).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Email == email);
+            return _userEntities.Where(x => x.Email == email).FirstOrDefaultAsync(token);
         }
         public Task<bool> HasAnyByEmailAsync(string email, CancellationToken token)
         {

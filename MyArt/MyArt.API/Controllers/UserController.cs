@@ -46,6 +46,17 @@ namespace MyArt.API.Controllers
         }
 
         [Authorize]
+        [Route("cabinet")]
+        [HttpGet(Name = nameof(GetCabinet))]
+        public async Task<ActionResult<CabinetViewModel>> GetCabinet()
+        {
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _userService.GetCabinetAsync(cancellationToken);
+
+            return Ok(result);
+        }
+
+        [Authorize]
         [Route("headerInfo")]
         [HttpPost(Name = nameof(GetHeaderUserInfo))]
         public async Task<ActionResult<HeaderUserInfoViewModel>> GetHeaderUserInfo()
