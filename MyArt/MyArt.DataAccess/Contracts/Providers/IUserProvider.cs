@@ -8,5 +8,7 @@ namespace MyArt.DataAccess.Contracts.Providers
     {
         Task<User> GetItemByEmailAsync(string email, CancellationToken cancellationToken);
         Task<bool> HasAnyByEmailAsync(string email, CancellationToken cancellationToken);
+        Task<byte[]> GetAvatarAsync(int userId, CancellationToken cancellationToken);
+        Task<User> GetItemByAliasAsync(string alias, CancellationToken token);
     }
 }

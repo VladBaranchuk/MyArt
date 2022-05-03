@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyArt.API.Infrastructure.Models;
 using MyArt.API.ViewModels;
 using MyArt.BusinessLogic.Contracts;
+using System.Net.Mime;
 
 namespace MyArt.API.Controllers
 {
@@ -100,6 +101,39 @@ namespace MyArt.API.Controllers
 
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             var result = await _userService.UpdatePublicUserInfoAsync(updatePublicUserInfoVM, cancellationToken);
+
+            return Ok(result);
+        }
+
+        [Route("image/{id}")]
+        [HttpGet(Name = nameof(GetAvatar))]
+        public async Task<ActionResult<byte[]>> GetAvatar(int id)
+        {
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _userService.GetAvatarAsync(id, cancellationToken);
+
+            return File(result, MediaTypeNames.Image.Jpeg);
+        }
+
+        [Authorize]
+        [Route("updateAvatar")]
+        [HttpGet(Name = nameof(UpdateAvatar))]
+        public async Task<IActionResult> UpdateAvatar([FromForm] UpdateAvatarViewModel avatar)
+        {
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            await _userService.UpdateAvatarAsync(avatar, cancellationToken);
+
+            return Ok();
+        }
+
+        [Route("account")]
+        [HttpGet(Name = nameof(GetAccount))]
+        public async Task<ActionResult<ShortArtViewModel>> GetAccount([FromQuery] string alias)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _userService.GetAccountAsync(alias, cancellationToken);
 
             return Ok(result);
         }

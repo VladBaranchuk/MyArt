@@ -10,6 +10,7 @@ namespace MyArt.Domain.Entities
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         public string Description { get; set; }
+        public byte[] Data { get; set; }
 
         public List<Art> Arts { get; set; }
         public List<Board> Boards { get; set; }

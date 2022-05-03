@@ -66,7 +66,9 @@ namespace MyArt.DataAccess.Providers
                 .Select(x => new ShortArtViewModel()
                 {
                     Id = x.Id,
-                    Alias = x.User.Alias
+                    Name = x.Name,
+                    Year = x.Year,
+                    Alias = x.User.Alias,
                 });
 
             return await _mapper.ProjectTo<ShortArtViewModel>(query).ToListAsync(cancellationToken);
@@ -94,6 +96,23 @@ namespace MyArt.DataAccess.Providers
                 .Select(x => new ShortArtViewModel()
                 {
                     Id = x.Id,
+                    Alias = x.User.Alias,
+                });
+
+            return await _mapper.ProjectTo<ShortArtViewModel>(query).ToListAsync(cancellationToken);
+        }
+        public async Task<List<ShortArtViewModel>> GetAllNewUserItemsAsync(int userId, int page, int size, CancellationToken cancellationToken)
+        {
+            var query = _artEntities
+                .Where(x => x.UserId == userId)
+                .OrderByDescending(x => x.Date)
+                .Skip(page * size)
+                .Take(size)
+                .Select(x => new ShortArtViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Year = x.Year,
                     Alias = x.User.Alias,
                 });
 

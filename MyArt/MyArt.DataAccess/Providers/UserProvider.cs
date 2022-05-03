@@ -2,7 +2,6 @@
 using MyArt.DataAccess.Contracts;
 using MyArt.DataAccess.Contracts.Providers;
 using MyArt.Domain.Entities;
-using MyArt.Domain.Enums;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,13 +16,26 @@ namespace MyArt.DataAccess.Providers
         {
             _userEntities = dataProvider.GetSet<User>();
         }
-        public override Task<User> GetItemByIdAsync(int id, CancellationToken token)
+        public override async Task<User> GetItemByIdAsync(int id, CancellationToken token)
         {
-            return _userEntities.Include(x => x.RoleToUsers).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Id == id);
+            return await _userEntities.Include(x => x.RoleToUsers).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Id == id, token);
         }
-        public Task<User> GetItemByEmailAsync(string email, CancellationToken token)
+        public async Task<User> GetItemByAliasAsync(string alias, CancellationToken token)
         {
-            return _userEntities.Where(x => x.Email == email).FirstOrDefaultAsync(token);
+            return await _userEntities.Include(x => x.RoleToUsers).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Alias == alias, token);
+        }
+        public async Task<User> GetItemByEmailAsync(string email, CancellationToken token)
+        {
+            return await _userEntities.Include(x => x.RoleToUsers).ThenInclude(x => x.Role).Where(x => x.Email == email).FirstOrDefaultAsync(token);
+        }
+        public async Task<byte[]> GetAvatarAsync(int userId, CancellationToken cancellationToken)
+        {
+            var query = await _userEntities
+                .Where(x => x.Id == userId)
+                .Select(x => x.Data)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return query;
         }
         public Task<bool> HasAnyByEmailAsync(string email, CancellationToken token)
         {

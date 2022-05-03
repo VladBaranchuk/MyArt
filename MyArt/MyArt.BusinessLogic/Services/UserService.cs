@@ -169,5 +169,55 @@ namespace MyArt.BusinessLogic.Services
 
             return updatePublicUserInfoViewModel;
         }
+        public async Task<byte[]> GetAvatarAsync(int userId, CancellationToken cancellationToken)
+        {
+            var bytes = await _userProvider.GetAvatarAsync(userId, cancellationToken);
+
+            return bytes;
+        }
+        public async Task UpdateAvatarAsync(UpdateAvatarViewModel avatarVM, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            byte[] avatarData = null;
+            using (var binaryReader = new BinaryReader(avatarVM.Avatar.OpenReadStream()))
+            {
+                avatarData = binaryReader.ReadBytes((int)avatarVM.Avatar.Length);
+            }
+
+            var user = await _userProvider.GetItemByIdAsync(userId, cancellationToken);
+
+            user.Data = avatarData;
+
+            await _userRepository.UpdateAsync(user, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
+        }
+        public async Task<AccountViewModel> GetAccountAsync(string alias, CancellationToken cancellationToken)
+        {
+            var user = await _userProvider.GetItemByAliasAsync(alias, cancellationToken);
+
+            var paintingsCount = await _artProvider.GetPaintingsCountAsync(user.Id, cancellationToken);
+            var photosCount = await _artProvider.GetPhotosCountAsync(user.Id, cancellationToken);
+            var sculpturesCount = await _artProvider.GetSculpturesCountAsync(user.Id, cancellationToken);
+            var arts = await _artProvider.GetAllUserItemsAsync(user.Id, 0, 10, cancellationToken);
+            var newArts = await _artProvider.GetAllNewUserItemsAsync(user.Id, 0, 12, cancellationToken);
+
+            var accountVM = new AccountViewModel()
+            {
+                Id = user.Id,
+                Alias = user.Alias,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email,
+                PaintingsCount = paintingsCount,
+                PhotosCount = photosCount,
+                SculpturesCount = sculpturesCount,
+                Description = user.Description,
+                NewArts = newArts,
+                Arts = arts
+            };
+
+            return accountVM;
+        }
     }
 }
