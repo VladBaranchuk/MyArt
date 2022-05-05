@@ -40,9 +40,10 @@ namespace MyArt.BusinessLogic.Services
             _mapper = mapper;
         }
 
-        public async Task AddCommentByIdAsync(CreateCommentViewModel comment, CancellationToken cancellationToken)
+        public async Task<CommentViewModel> AddCommentByIdAsync(CreateCommentViewModel comment, CancellationToken cancellationToken)
         {
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+            var user = await _userService.GetUserByIdAsync(userId, cancellationToken);
 
             var newComment = new Comment()
             {
@@ -65,6 +66,13 @@ namespace MyArt.BusinessLogic.Services
             newComment.ArtComments.Add(artComments);
 
             await _db.SaveChangesAsync(cancellationToken);
+
+            var comm = _mapper.Map<Comment, CommentViewModel>(newComment);
+
+            comm.UserId = user.Id;
+            comm.Alias = user.Alias;
+
+            return comm;
         }
         public async Task AddLikeByIdAsync(int artId, CancellationToken cancellationToken)
         {
@@ -132,6 +140,12 @@ namespace MyArt.BusinessLogic.Services
 
             return arts;
         }
+        public async Task<List<ShortArtViewModel>> GetAllByArtsFilterAsync(ArtFilterViewModel filter, int page, int size, CancellationToken cancellationToken)
+        {
+            var arts = await _artProvider.GetAllByArtsFilterAsync(filter, page, size, cancellationToken);
+
+            return arts;
+        }
         public async Task<List<ShortArtViewModel>> GetAllUserArtsAsync(int page, int size, CancellationToken cancellationToken)
         {
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
@@ -150,14 +164,14 @@ namespace MyArt.BusinessLogic.Services
                 artData = binaryReader.ReadBytes((int)createArtVM.Image.Length);
             }
 
-            var colors = _colorService.GetColorPalette(createArtVM.Image);
+            var colors = _colorService.GetColorPalette(createArtVM.Image, 9);
 
 
             Art art = new Art() {
                 Name = createArtVM.Name,
-                BrightColor = colors[0],
-                MutedColor = colors[1],
-                DarkColor = colors[2],
+                BrightColor = colors.BrightColor,
+                MutedColor = colors.MutedColor,
+                DarkColor = colors.DarkColor,
                 ShareCount = 0,
                 Price = createArtVM.Price,
                 Month = (EMonth)createArtVM.Month,

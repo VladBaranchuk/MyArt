@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using MyArt.API.ViewModels;
 using MyArt.BusinessLogic.Contracts;
 using System.Drawing;
 
@@ -6,43 +7,58 @@ namespace MyArt.BusinessLogic.Services
 {
     public class ColorService : IColorService
     {
-        public string[] GetColorPalette(IFormFile img)
+        public ColorsViewModel GetColorPalette(IFormFile img, int numberOfColors, int imageGranularity, int colorGranularity)
         {
             Image image = Image.FromStream(img.OpenReadStream(), true, true);
 
-            int thumbSize = 500;
-
             Dictionary<Color, int> colors = new Dictionary<Color, int>();
+            Dictionary<Color, int> brightness = new Dictionary<Color, int>();
 
             Bitmap thumbBmp = new Bitmap(image);
-            
 
-            for (int i = 1; i < thumbBmp.Size.Width; i++)
+            for (int i = 1; i < thumbBmp.Size.Width; i += imageGranularity)
             {
-                for (int j = 1; j < thumbBmp.Size.Height; j++)
+                for (int j = 1; j < thumbBmp.Size.Height; j += imageGranularity)
                 {
                     Color col = thumbBmp.GetPixel(i, j);
-                    if (colors.ContainsKey(col))
-                        colors[col]++;
+
+                    var red = (int)Math.Round(Math.Round(col.R / (double)colorGranularity) * colorGranularity);
+                    var green = (int)Math.Round(Math.Round(col.G / (double)colorGranularity) * colorGranularity);
+                    var blue = (int)Math.Round(Math.Round(col.B / (double)colorGranularity) * colorGranularity);
+
+                    Color newCol = Color.FromArgb(red, green, blue);
+
+                    if (colors.ContainsKey(newCol))
+                        colors[newCol]++;
                     else
-                        colors.Add(col, 1);
+                        colors.Add(newCol, 1);
                 }
             }
 
-            List<KeyValuePair<Color, int>> keyValueList = new List<KeyValuePair<Color, int>>(colors);
+            List<KeyValuePair<Color, int>> countValueList = new List<KeyValuePair<Color, int>>(colors);
 
-            keyValueList.Sort(delegate (KeyValuePair<Color, int> firstPair,KeyValuePair<Color, int> nextPair)
+            countValueList.Sort(delegate (KeyValuePair<Color, int> firstPair, KeyValuePair<Color, int> nextPair)
             {
                 return nextPair.Value.CompareTo(firstPair.Value);
             });
 
-            var topColors = new string[3];
-            for (int i = 0; i < 3; i++)
+            foreach (var item in countValueList)
             {
-                topColors[i] = ColorTranslator.ToHtml(keyValueList[i].Key).ToString();
+                brightness[item.Key] = (int)(0.2126 * item.Key.R + 0.7152 * item.Key.G + 0.0722 * item.Key.B);
             }
 
-            return topColors;
+            var brightColor = brightness.FirstOrDefault(x => x.Value > 220);
+            var mutedColor = brightness.FirstOrDefault(x => x.Value > 130 && x.Value < 160);
+            var darkColor = brightness.FirstOrDefault(x => x.Value < 60);
+
+            var colorsVM = new ColorsViewModel()
+            {
+                BrightColor = ColorTranslator.ToHtml(brightColor.Key).ToString(),
+                MutedColor = ColorTranslator.ToHtml(mutedColor.Key).ToString(),
+                DarkColor = ColorTranslator.ToHtml(darkColor.Key).ToString()
+            };
+
+            return colorsVM;
         }
     }
 }

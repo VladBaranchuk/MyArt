@@ -14,6 +14,7 @@ namespace MyArt.DataAccess.Contracts.Providers
         Task<bool> HasLikedArtByIdAsync(int userId, int artId, CancellationToken cancellationToken);
         Task<List<ShortArtViewModel>> GetAllItemsAsync(int page, int size, CancellationToken cancellationToken);
         Task<List<ShortArtViewModel>> GetAllUserItemsAsync(int userId, int page, int size, CancellationToken cancellationToken);
+        Task<List<ShortArtViewModel>> GetAllByArtsFilterAsync(ArtFilterViewModel filter, int page, int size, CancellationToken cancellationToken);
         Task<int> GetPaintingsCountAsync(int id, CancellationToken token);
         Task<int> GetPhotosCountAsync(int id, CancellationToken token);
         Task<int> GetSculpturesCountAsync(int id, CancellationToken token);

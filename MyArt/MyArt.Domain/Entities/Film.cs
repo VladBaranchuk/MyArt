@@ -16,6 +16,7 @@ namespace MyArt.Domain.Entities
         public EAnnouncement Announcement { get; set; }
         public ERelease Release { get; set; }
         public DateTime ReleaseDate { get; set; }
+        public byte[] Data { get; set; }
 
         public List<GenreToFilm> GenreToFilms { get; set; }
         public List<LikeFilms> LikeFilms { get; set; }

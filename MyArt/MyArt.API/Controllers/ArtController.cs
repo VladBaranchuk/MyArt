@@ -45,6 +45,18 @@ namespace MyArt.API.Controllers
             return Ok(result);
         }
 
+        [Route("filter")]
+        [HttpPut(Name = nameof(GetFilterArts))]
+        public async Task<ActionResult<ShortArtViewModel>> GetFilterArts([FromForm] ArtFilterViewModel artFilterViewModel, [FromQuery] int page = 0, [FromQuery] int size = 10)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _artService.GetAllByArtsFilterAsync(artFilterViewModel, page, size, cancellationToken);
+
+            return Ok(result);
+        }
+
         [Authorize]
         [Route("like/{id}")]
         [HttpPut(Name = nameof(AddLikeToArtById))]
@@ -61,14 +73,14 @@ namespace MyArt.API.Controllers
         [Authorize]
         [Route("comment")]
         [HttpPut(Name = nameof(AddCommentToArtById))]
-        public async Task<IActionResult> AddCommentToArtById(CreateCommentViewModel comment)
+        public async Task<ActionResult<CommentViewModel>> AddCommentToArtById(CreateCommentViewModel comment)
         {
             //_authValidator.ValidateAndThrow(authVM);
 
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
-            await _artService.AddCommentByIdAsync(comment, cancellationToken);
+            var result = await _artService.AddCommentByIdAsync(comment, cancellationToken);
 
-            return Ok();
+            return Ok(result);
         }
 
         [Authorize]

@@ -7,5 +7,8 @@ namespace MyArt.API.ViewModels
         public string Name { get; set; }
         public string Year { get; set; }
         public string Alias { get; set; }
+        public string BrightColor { get; set; }
+        public string MutedColor { get; set; }
+        public string DarkColor { get; set; }
     }
 }
