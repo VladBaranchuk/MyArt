@@ -70,6 +70,18 @@ namespace MyArt.API.Controllers
             return Ok();
         }
 
+        [Route("share/{id}")]
+        [HttpPut(Name = nameof(UpdateShareToArtById))]
+        public async Task<IActionResult> UpdateShareToArtById(int id)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            await _artService.UpdateShareToArtByIdAsync(id, cancellationToken);
+
+            return Ok();
+        }
+
         [Authorize]
         [Route("comment")]
         [HttpPut(Name = nameof(AddCommentToArtById))]
@@ -102,6 +114,17 @@ namespace MyArt.API.Controllers
             var result = await _artService.GetImageAsync(id, cancellationToken);
 
             return File(result, MediaTypeNames.Image.Jpeg);
+        }
+
+        [Authorize]
+        [Route("sale/{id}")]
+        [HttpPut(Name = nameof(BuyArt))]
+        public async Task<IActionResult> BuyArt(int id)
+        {
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            await _artService.BuyArtAsync(id, cancellationToken);
+
+            return Ok();
         }
     }
 }

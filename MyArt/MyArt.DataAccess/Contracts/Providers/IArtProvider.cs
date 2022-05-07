@@ -20,5 +20,6 @@ namespace MyArt.DataAccess.Contracts.Providers
         Task<int> GetSculpturesCountAsync(int id, CancellationToken token);
         Task<byte[]> GetImageAsync(int artId, CancellationToken cancellationToken);
         Task<List<ShortArtViewModel>> GetAllNewUserItemsAsync(int userId, int page, int size, CancellationToken cancellationToken);
+        Task<bool> HasAnyItemByIdAsync(int id, CancellationToken cancellationToken);
     }
 }

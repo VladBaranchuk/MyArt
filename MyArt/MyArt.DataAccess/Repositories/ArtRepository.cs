@@ -23,13 +23,11 @@ namespace MyArt.DataAccess.Repositories
             _artCommentsEntities.Add(comment);
             return Task.CompletedTask;
         }
-
         public Task AddLikeAsync(LikeArts likeArts, CancellationToken cancellationToken)
         {
             _likeArtsEntities.Add(likeArts);
             return Task.CompletedTask;
         }
-
         public Task RemoveLikeAsync(LikeArts likeArts, CancellationToken cancellationToken)
         {
             _likeArtsEntities.Remove(likeArts);

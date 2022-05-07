@@ -29,7 +29,6 @@ namespace MyArt.DataAccess.Providers
             _likeArtsEntities = dataProvider.GetSet<LikeArts>();
             _artCommentsEntities = dataProvider.GetSet<ArtComments>();
         }
-
         public async Task<List<CommentViewModel>> GetCommentsByIdAsync(int id, CancellationToken cancellationToken)
         {
             var commentIds = _artCommentsEntities
@@ -53,7 +52,7 @@ namespace MyArt.DataAccess.Providers
         }
         public async Task<int> GetCommentsCountByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var count = await _artCommentsEntities.Select(x => x.ArtId == id).CountAsync(cancellationToken);
+            var count = await _artCommentsEntities.Where(x => x.ArtId == id).CountAsync(cancellationToken);
             return count;
         }
         public async override Task<Art> GetItemByIdAsync(int id, CancellationToken cancellationToken)
@@ -81,7 +80,7 @@ namespace MyArt.DataAccess.Providers
         }
         public async Task<int> GetLikesCountByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var count = await _likeArtsEntities.Select(x => x.ArtId == id).CountAsync(cancellationToken);
+            var count = await _likeArtsEntities.Where(x => x.ArtId == id).CountAsync(cancellationToken);
             return count;
         }
         public async Task<bool> HasLikedArtByIdAsync(int userId, int artId, CancellationToken cancellationToken)
@@ -188,26 +187,27 @@ namespace MyArt.DataAccess.Providers
 
             return query;
         }
-        public Task<int> GetPaintingsCountAsync(int id, CancellationToken token)
+        public async Task<int> GetPaintingsCountAsync(int id, CancellationToken token)
         {
-            return _artEntities
-                .Where(x => x.UserId == id)
-                .Select(x => x.Type == EType.Picture)
+            return await _artEntities
+                .Where(x => x.UserId == id && x.Type == EType.Picture)
                 .CountAsync(token);
         }
-        public Task<int> GetPhotosCountAsync(int id, CancellationToken token)
+        public async Task<int> GetPhotosCountAsync(int id, CancellationToken token)
         {
-            return _artEntities
-                .Where(x => x.UserId == id)
-                .Select(x => x.Type == EType.Photo)
+            return await _artEntities
+                .Where(x => x.UserId == id && x.Type == EType.Photo)
                 .CountAsync(token);
         }
-        public Task<int> GetSculpturesCountAsync(int id, CancellationToken token)
+        public async Task<int> GetSculpturesCountAsync(int id, CancellationToken token)
         {
-            return _artEntities
-                .Where(x => x.UserId == id)
-                .Select(x => x.Type == EType.Sculpture)
+            return await _artEntities
+                .Where(x => x.UserId == id && x.Type == EType.Sculpture)
                 .CountAsync(token);
+        }
+        public async Task<bool> HasAnyItemByIdAsync(int id, CancellationToken cancellationToken)
+        {
+            return await _artEntities.AnyAsync(x => x.Id == id, cancellationToken);
         }
     }
 }

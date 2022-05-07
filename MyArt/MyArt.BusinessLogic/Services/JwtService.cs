@@ -33,7 +33,7 @@ namespace MyArt.BusinessLogic.Services
                 issuer: _options.Value.Issuer,
                 audience: _options.Value.Audience,
                 claims: Subject,
-                expires: DateTime.UtcNow.AddDays(7),
+                expires: DateTime.UtcNow.AddDays(70),
                 signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
             );
 

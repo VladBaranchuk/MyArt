@@ -97,6 +97,17 @@ namespace MyArt.BusinessLogic.Services
 
             await _db.SaveChangesAsync(cancellationToken);
         }
+        public async Task UpdateShareToArtByIdAsync(int artId, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            var art = await _artProvider.GetItemByIdAsync(artId, cancellationToken);
+
+            art.ShareCount++;
+
+            await _artRepository.UpdateAsync(art, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
+        }
         public async Task<ArtViewModel> GetArtByIdAsync(int artId, CancellationToken cancellationToken)
         {
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
@@ -194,5 +205,17 @@ namespace MyArt.BusinessLogic.Services
 
             return bytes;
         }
+        public async Task BuyArtAsync(int artId, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            var art = await _artProvider.GetItemByIdAsync(artId, cancellationToken);
+
+            art.SellingAvailability = ESellingAvailability.Sold;
+
+            await _artRepository.UpdateAsync(art, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
+        }
+        
     }
 }

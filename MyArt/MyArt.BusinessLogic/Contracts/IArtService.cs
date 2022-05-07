@@ -11,5 +11,7 @@ namespace MyArt.BusinessLogic.Contracts
         Task AddArtAsync(CreateArtViewModel createArtVM, CancellationToken cancellationToken);
         Task<List<ShortArtViewModel>> GetAllByArtsFilterAsync(ArtFilterViewModel filter, int page, int size, CancellationToken cancellationToken);
         Task<byte[]> GetImageAsync(int artId, CancellationToken cancellationToken);
+        Task BuyArtAsync(int artId, CancellationToken cancellationToken);
+        Task UpdateShareToArtByIdAsync(int artId, CancellationToken cancellationToken);
     }
 }

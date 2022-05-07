@@ -153,11 +153,6 @@ namespace MyArt.BusinessLogic.Services
 
             var user = await _userProvider.GetItemByIdAsync(userId, cancellationToken);
 
-            if (user == null)
-            {
-                throw new ApplicationException($"User with id {infoVM.Id} not found");
-            }
-
             user.FirstName = infoVM.FirstName;
             user.LastName = infoVM.LastName;
             user.Description = infoVM.Description;
