@@ -70,6 +70,7 @@ namespace MyArt.API.Infrastructure.Configurations
                 x.AddProfile<FilmProfile>();
                 x.AddProfile<CommentProfile>();
                 x.AddProfile<ArtProfile>();
+                x.AddProfile<BoardProfile>();
             });
 
             return services;

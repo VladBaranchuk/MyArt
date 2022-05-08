@@ -15,6 +15,7 @@ namespace MyArt.BusinessLogic.Services
         private readonly IUserProvider _userProvider;
         private readonly IUserRepository _userRepository;
         private readonly IArtProvider _artProvider;
+        private readonly IBoardService _boardService;
         private readonly ICurrentUserService _currentUserService;
         private readonly IMapper _mapper;
 
@@ -23,6 +24,7 @@ namespace MyArt.BusinessLogic.Services
             IUserProvider userProvider,
             IUserRepository userRepository,
             IArtProvider artProvider,
+            IBoardService boardService,
             ICurrentUserService currentUserService,
             IJwtService jwtService,
             IMapper mapper)
@@ -33,6 +35,7 @@ namespace MyArt.BusinessLogic.Services
             _userProvider = userProvider;
             _currentUserService = currentUserService;
             _jwtService = jwtService;
+            _boardService = boardService;
             _db = context;
         }
 
@@ -92,6 +95,7 @@ namespace MyArt.BusinessLogic.Services
             var photosCount = await _artProvider.GetPhotosCountAsync(user.Id, cancellationToken);
             var sculpturesCount = await _artProvider.GetSculpturesCountAsync(user.Id, cancellationToken);
             var arts = await _artProvider.GetAllUserItemsAsync(user.Id, 0, 10, cancellationToken);
+            var boards = await _boardService.GetAllUserBoardsAsync(0, 10, cancellationToken);
 
             var cabinetVM = new CabinetViewModel()
             {
@@ -103,7 +107,8 @@ namespace MyArt.BusinessLogic.Services
                 PhotosCount = photosCount,
                 SculpturesCount = sculpturesCount,
                 Description = user.Description,
-                Arts = arts
+                Arts = arts,
+                Boards = boards
             };
 
             return cabinetVM;

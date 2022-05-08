@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyArt.API.ViewModels;
 using MyArt.BusinessLogic.Contracts;
@@ -30,6 +31,31 @@ namespace MyArt.API.Controllers
             var result = await _boardService.GetAllBoardsAsync(page, size, cancellationToken);
 
             return Ok(result);
+        }
+
+        [Route("share/{id}")]
+        [HttpPut(Name = nameof(UpdateShareToBoardById))]
+        public async Task<IActionResult> UpdateShareToBoardById(int id)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            await _boardService.UpdateShareToBoardByIdAsync(id, cancellationToken);
+
+            return Ok();
+        }
+
+        [Authorize]
+        [Route("like/{id}")]
+        [HttpPut(Name = nameof(AddLikeToBoardById))]
+        public async Task<IActionResult> AddLikeToBoardById(int id)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            await _boardService.AddLikeByIdAsync(id, cancellationToken);
+
+            return Ok();
         }
     }
 }

@@ -12,6 +12,7 @@ namespace MyArt.API.ViewModels
         public int SculpturesCount { get; set; }
         public string Description { get; set; }
         public List<ShortArtViewModel> Arts { get; set; }
+        public List<ShortBoardViewModel> Boards { get; set; }
     }
 
 }
