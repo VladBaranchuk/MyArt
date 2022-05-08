@@ -12,8 +12,8 @@ using MyArt.DataAccess;
 namespace MyArt.DataAccess.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220425210956_AddDataToArt")]
-    partial class AddDataToArt
+    [Migration("20220508113615_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -46,7 +46,7 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 4, 26, 0, 9, 56, 527, DateTimeKind.Local).AddTicks(3501));
+                        .HasDefaultValue(new DateTime(2022, 5, 8, 14, 36, 15, 642, DateTimeKind.Local).AddTicks(9163));
 
                     b.Property<int>("Moderation")
                         .ValueGeneratedOnAdd()
@@ -189,7 +189,7 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<DateTime>("Date")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2022, 4, 26, 0, 9, 56, 528, DateTimeKind.Local).AddTicks(9290));
+                        .HasDefaultValue(new DateTime(2022, 5, 8, 14, 36, 15, 644, DateTimeKind.Local).AddTicks(821));
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -367,6 +367,9 @@ namespace MyArt.DataAccess.Migrations
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<byte[]>("Data")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -564,6 +567,9 @@ namespace MyArt.DataAccess.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("Data")
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
@@ -666,16 +672,16 @@ namespace MyArt.DataAccess.Migrations
 
             modelBuilder.Entity("MyArt.Domain.Entities.ArtToBoard", b =>
                 {
-                    b.HasOne("MyArt.Domain.Entities.Board", "Board")
-                        .WithMany("ArtToBoards")
-                        .HasForeignKey("ArtId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
                     b.HasOne("MyArt.Domain.Entities.Art", "Art")
                         .WithMany("ArtToBoards")
-                        .HasForeignKey("BoardId")
+                        .HasForeignKey("ArtId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MyArt.Domain.Entities.Board", "Board")
+                        .WithMany("ArtToBoards")
+                        .HasForeignKey("BoardId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Art");

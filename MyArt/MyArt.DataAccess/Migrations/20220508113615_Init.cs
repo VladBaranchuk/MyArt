@@ -74,7 +74,8 @@ namespace MyArt.DataAccess.Migrations
                     Visible = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Announcement = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Release = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
-                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false)
+                    ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Data = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -118,7 +119,8 @@ namespace MyArt.DataAccess.Migrations
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Data = table.Column<byte[]>(type: "varbinary(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -191,7 +193,8 @@ namespace MyArt.DataAccess.Migrations
                     Visible = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Moderation = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     Type = table.Column<int>(type: "int", nullable: false),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 4, 23, 17, 24, 49, 211, DateTimeKind.Local).AddTicks(2993)),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 5, 8, 14, 36, 15, 642, DateTimeKind.Local).AddTicks(9163)),
+                    Data = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -214,7 +217,7 @@ namespace MyArt.DataAccess.Migrations
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Visible = table.Column<int>(type: "int", nullable: false, defaultValue: 0),
                     ShareCount = table.Column<int>(type: "int", nullable: true),
-                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 4, 23, 17, 24, 49, 212, DateTimeKind.Local).AddTicks(6290)),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false, defaultValue: new DateTime(2022, 5, 8, 14, 36, 15, 644, DateTimeKind.Local).AddTicks(821)),
                     UserId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -521,14 +524,14 @@ namespace MyArt.DataAccess.Migrations
                 {
                     table.PrimaryKey("PK_ArtToBoard", x => new { x.BoardId, x.ArtId });
                     table.ForeignKey(
-                        name: "FK_ArtToBoard_Art_BoardId",
-                        column: x => x.BoardId,
+                        name: "FK_ArtToBoard_Art_ArtId",
+                        column: x => x.ArtId,
                         principalTable: "Art",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_ArtToBoard_Board_ArtId",
-                        column: x => x.ArtId,
+                        name: "FK_ArtToBoard_Board_BoardId",
+                        column: x => x.BoardId,
                         principalTable: "Board",
                         principalColumn: "Id");
                 });

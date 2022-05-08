@@ -10,10 +10,10 @@ namespace MyArt.DataAccess.Configurations
         {
             builder.ToTable("ArtToBoard");
 
-            builder.HasKey(x => new { x.BoardId, x.ArtId });
+            builder.HasKey(x => new { x.BoardId, x.ArtId});
 
-            builder.HasOne(x => x.Art).WithMany(x => x.ArtToBoards).HasForeignKey(x => x.BoardId);
-            builder.HasOne(x => x.Board).WithMany(x => x.ArtToBoards).HasForeignKey(x => x.ArtId).OnDelete(DeleteBehavior.NoAction);
+            builder.HasOne(x => x.Art).WithMany(x => x.ArtToBoards).HasForeignKey(x => x.ArtId);
+            builder.HasOne(x => x.Board).WithMany(x => x.ArtToBoards).HasForeignKey(x => x.BoardId).OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
