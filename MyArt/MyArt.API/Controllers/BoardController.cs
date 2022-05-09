@@ -33,6 +33,32 @@ namespace MyArt.API.Controllers
             return Ok(result);
         }
 
+        [Authorize]
+        [Route("userboards/{id}")]
+        [HttpGet(Name = nameof(GetUserBoards))]
+        public async Task<ActionResult<UserboardsViewModel>> GetUserBoards(int id)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _boardService.GetAllUserboardsAsync(id, cancellationToken);
+
+            return Ok(result);
+        }
+
+        [Authorize]
+        [Route("userboards/update/{id}")]
+        [HttpPut(Name = nameof(UpdateUserBoards))]
+        public async Task<IActionResult> UpdateUserBoards(int id, [FromBody] int[] ids)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            await _boardService.UpdateUserboardsAsync(id, ids, cancellationToken);
+
+            return Ok();
+        }
+
         [Route("share/{id}")]
         [HttpPut(Name = nameof(UpdateShareToBoardById))]
         public async Task<IActionResult> UpdateShareToBoardById(int id)
@@ -54,6 +80,18 @@ namespace MyArt.API.Controllers
 
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             await _boardService.AddLikeByIdAsync(id, cancellationToken);
+
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPost(Name = nameof(AddBoard))]
+        public async Task<IActionResult> AddBoard(CreateBoardViewModel createBoardViewModel)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            await _boardService.AddBoardAsync(createBoardViewModel, cancellationToken);
 
             return Ok();
         }

@@ -11,5 +11,6 @@ namespace MyArt.DataAccess.Contracts.Providers
         Task<bool> HasLikedBoardByIdAsync(int userId, int boardId, CancellationToken cancellationToken);
         Task<List<ShortBoardViewModel>> GetAllItemsAsync(int page, int size, CancellationToken cancellationToken);
         Task<List<ShortBoardViewModel>> GetAllUserItemsAsync(int userId, int page, int size, CancellationToken cancellationToken);
+        Task<List<UserboardViewModel>> GetAllUserboardsAsync(int userId, int artId, CancellationToken cancellationToken);
     }
 }

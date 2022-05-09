@@ -8,6 +8,8 @@ namespace MyArt.BusinessLogic.Contracts
         Task UpdateShareToBoardByIdAsync(int boardId, CancellationToken cancellationToken);
         Task<List<ShortBoardViewModel>> GetAllBoardsAsync(int page, int size, CancellationToken cancellationToken);
         Task<List<ShortBoardViewModel>> GetAllUserBoardsAsync(int page, int size, CancellationToken cancellationToken);
-
+        Task AddBoardAsync(CreateBoardViewModel boardVM, CancellationToken cancellationToken);
+        Task<UserboardsViewModel> GetAllUserboardsAsync(int artId, CancellationToken cancellationToken);
+        Task UpdateUserboardsAsync(int artId, int[] boardIds, CancellationToken cancellationToken);
     }
 }

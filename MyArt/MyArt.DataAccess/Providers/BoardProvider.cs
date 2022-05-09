@@ -61,6 +61,21 @@ namespace MyArt.DataAccess.Providers
 
             return await _mapper.ProjectTo<ShortBoardViewModel>(query).ToListAsync(cancellationToken);
         }
+        public async Task<List<UserboardViewModel>> GetAllUserboardsAsync(int userId, int artId, CancellationToken cancellationToken)
+        {
+            var query = _boardEntities
+                .Where(x => x.UserId == userId)
+                .OrderBy(x => x.Id)
+                .Select(x => new UserboardViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    FirstId = x.ArtToBoards.FirstOrDefault().ArtId,
+                    HasChecked = x.ArtToBoards.Any(x => x.ArtId == artId)
+                });
+
+            return await _mapper.ProjectTo<UserboardViewModel>(query).ToListAsync(cancellationToken);
+        }
         public async Task<bool> HasLikedBoardByIdAsync(int userId, int boardId, CancellationToken cancellationToken)
         {
             var hasLiked = await _likeBoardsEntities

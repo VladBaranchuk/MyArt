@@ -8,6 +8,8 @@ namespace MyArt.BusinessLogic.Mappings
         public BoardProfile()
         {
             CreateMap<ShortBoardViewModel, ShortBoardViewModel>();
+
+            CreateMap<UserboardViewModel, UserboardViewModel>();
         }
     }
 }

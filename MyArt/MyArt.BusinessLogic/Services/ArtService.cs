@@ -201,6 +201,7 @@ namespace MyArt.BusinessLogic.Services
         }
         public async Task<byte[]> GetImageAsync(int artId, CancellationToken cancellationToken)
         {
+
             var bytes = await _artProvider.GetImageAsync(artId, cancellationToken);
 
             return bytes;

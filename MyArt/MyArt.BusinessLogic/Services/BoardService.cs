@@ -96,7 +96,80 @@ namespace MyArt.BusinessLogic.Services
 
             return boards;
         }
+        public async Task<UserboardsViewModel> GetAllUserboardsAsync(int artId, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
 
+            var userboards = await _boardProvider.GetAllUserboardsAsync(userId, artId, cancellationToken);
+
+            var checkedIds = new List<int>();
+
+            foreach (var userboard in userboards)
+            {
+                if (userboard.HasChecked)
+                {
+                    checkedIds.Add(userboards.IndexOf(userboard) + 1);
+                }
+            }
+
+            var userboardsVM = new UserboardsViewModel()
+            {
+                Userboards = userboards,
+                CheckedUserboards = checkedIds.ToArray()
+            };
+
+            return userboardsVM;
+        }
+        public async Task UpdateUserboardsAsync(int artId, int[] boardIds, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            var boards = await _boardProvider.GetAllUserboardsAsync(userId, artId, cancellationToken);
+
+            foreach(var board in boards)
+            {
+                var hasAny = boardIds.Any(x => x == board.Id);
+
+                if (board.HasChecked == false && hasAny == true)
+                {
+                    var item = new ArtToBoard()
+                    {
+                        ArtId = artId,
+                        BoardId = board.Id
+                    };
+
+                    await _boardRepository.AddArtToBoard(item, cancellationToken);
+                }
+                else if(board.HasChecked == true && hasAny == false)
+                {
+                    var item = new ArtToBoard()
+                    {
+                        ArtId = artId,
+                        BoardId = board.Id
+                    };
+
+                    await _boardRepository.RemoveArtFromBoard(item, cancellationToken);
+                }
+            }
+
+            await _db.SaveChangesAsync(cancellationToken);
+        }
+        public async Task AddBoardAsync(CreateBoardViewModel boardVM, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            Board board = new Board()
+            {
+                Name = boardVM.Name,
+                Visible = 0,
+                ShareCount = 0,
+                Date = DateTime.Now,
+                UserId = userId
+            };
+
+            await _boardRepository.CreateAsync(board, cancellationToken);
+            await _db.SaveChangesAsync(cancellationToken);
+        }
         public async Task UpdateShareToBoardByIdAsync(int boardId, CancellationToken cancellationToken)
         {
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);

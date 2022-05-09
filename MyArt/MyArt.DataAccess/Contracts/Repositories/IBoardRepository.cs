@@ -8,6 +8,8 @@ namespace MyArt.DataAccess.Contracts.Repositories
     {
         Task AddLikeAsync(LikeBoards likeBoards, CancellationToken cancellationToken);
         Task RemoveLikeAsync(LikeBoards likeBoards, CancellationToken cancellationToken);
+        Task AddArtToBoard(ArtToBoard item, CancellationToken cancellationToken);
+        Task RemoveArtFromBoard(ArtToBoard item, CancellationToken cancellationToken);
 
     }
 }
