@@ -35,12 +35,12 @@ namespace MyArt.API.Controllers
 
         [Route("all")]
         [HttpGet(Name = nameof(GetArts))]
-        public async Task<ActionResult<ShortArtViewModel>> GetArts([FromQuery] int page = 0, [FromQuery] int size = 15)
+        public async Task<ActionResult<ShortArtViewModel>> GetArts([FromQuery] int page = 0, [FromQuery] int size = 15, [FromQuery] int type = 0)
         {
             //_authValidator.ValidateAndThrow(authVM);
 
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
-            var result = await _artService.GetAllArtsAsync(page, size, cancellationToken);
+            var result = await _artService.GetAllArtsAsync(page, size, type, cancellationToken);
 
             return Ok(result);
         }

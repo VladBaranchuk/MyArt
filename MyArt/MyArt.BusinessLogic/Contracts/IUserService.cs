@@ -16,5 +16,6 @@ namespace MyArt.BusinessLogic.Contracts
         Task<byte[]> GetAvatarAsync(int userId, CancellationToken cancellationToken);
         Task UpdateAvatarAsync(UpdateAvatarViewModel avatarVM, CancellationToken cancellationToken);
         Task<AccountViewModel> GetAccountAsync(string alias, CancellationToken cancellationToken);
+        Task<List<AuthorViewModel>> GetAllAuthorsAsync(int page, int size, CancellationToken cancellationToken);
     }
 }

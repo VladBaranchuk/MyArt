@@ -20,6 +20,7 @@ namespace MyArt.API.ViewModels
         public int LikesCount { get; set; }
         public int CommentsCount { get; set; }
         public bool HasLiked { get; set; }
+        public bool HasOnBoard { get; set; }
         public List<ShortArtViewModel> Arts { get; set; }
         public List<CommentViewModel> Comments { get; set; }
     }

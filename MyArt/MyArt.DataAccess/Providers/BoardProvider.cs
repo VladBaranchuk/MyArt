@@ -42,6 +42,20 @@ namespace MyArt.DataAccess.Providers
 
             return await _mapper.ProjectTo<ShortBoardViewModel>(query).ToListAsync(cancellationToken);
         }
+        public async Task<int> GetFirstArtIdFromBoardAsync(int boardId, CancellationToken cancellationToken)
+        {
+            var result = await _boardEntities
+                .Where(x => x.Id == boardId)
+                .Select(x => x.ArtToBoards.FirstOrDefault().ArtId)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return result;
+        }
+        public async Task<int> GetLikesCountByIdAsync(int boardId, CancellationToken cancellationToken)
+        {
+            var count = await _likeBoardsEntities.Where(x => x.BoardId == boardId).CountAsync(cancellationToken);
+            return count;
+        }
         public async Task<List<ShortBoardViewModel>> GetAllUserItemsAsync(int userId, int page, int size, CancellationToken cancellationToken)
         {
             var query = _boardEntities

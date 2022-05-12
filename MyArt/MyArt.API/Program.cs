@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using MyArt.API.Helpers;
+using MyArt.API.Hubs;
 using MyArt.API.Infrastructure.Configurations;
 using MyArt.BusinessLogic.Contracts;
 using MyArt.BusinessLogic.Models;
@@ -12,6 +14,8 @@ using System.Collections;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
 
 var jwtConfig = new JwtOptions();
 
@@ -40,6 +44,9 @@ builder.Services.AddScoped<IDataContext, DataContext>();
 builder.Configuration.GetSection("JwtOptions").Bind(jwtConfig);
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection("JwtOptions"));
 
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<IUserIdProvider, NameUserIdProvider>();
+
 builder.Services.AddAuthorization();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(options =>
 {
@@ -52,6 +59,21 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(jwtConfig.SecretKey))
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && (path.StartsWithSegments("/Notification")))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -67,14 +89,17 @@ builder.Services.AddScoped<IArtService, ArtService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IColorService, ColorService>();
 builder.Services.AddScoped<IBoardService, BoardService>();
-
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost", builder => builder.AllowAnyHeader().AllowAnyMethod()
-    .AllowAnyOrigin()
-    );
+    options.AddPolicy("AllowLocalhost",
+        builder => builder.AllowAnyHeader()
+                          .AllowAnyMethod()
+                          .SetIsOriginAllowed(origin => true)
+                          .AllowCredentials());
 });
+
 
 var app = builder.Build();
 
@@ -89,9 +114,13 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseRouting();
 app.UseCors("AllowLocalhost");
+app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
-app.UseEndpoints(x => x.MapDefaultControllerRoute());
+app.UseEndpoints(x => {
+    x.MapDefaultControllerRoute();
+    x.MapHub<NotificationHub>("/Notification");
+});
+
 app.Run();

@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using MyArt.API.ViewModels;
 using MyArt.DataAccess.Contracts;
 using MyArt.DataAccess.Contracts.Providers;
 using MyArt.Domain.Entities;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,14 +14,41 @@ namespace MyArt.DataAccess.Providers
     public class UserProvider : BaseProvider<User>, IUserProvider
     {
         private readonly DbSet<User> _userEntities;
+        private readonly DbSet<Art> _artEntities;
+        private readonly IMapper _mapper;
 
-        public UserProvider(IDataProvider dataProvider) : base(dataProvider)
+        public UserProvider(IDataProvider dataProvider, IMapper mapper) : base(dataProvider)
         {
             _userEntities = dataProvider.GetSet<User>();
+            _artEntities = dataProvider.GetSet<Art>();
+            _mapper = mapper;
+        }
+
+        public async Task<List<AuthorViewModel>> GetAllItemsAsync(int page, int size, CancellationToken cancellationToken)
+        {
+            var query = _userEntities
+                .OrderBy(x => x.Id)
+                .Skip(page * size)
+                .Take(size)
+                .Select(x => new AuthorViewModel()
+                {
+                    Id = x.Id,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Alias = x.Alias
+                });
+
+            return await _mapper.ProjectTo<AuthorViewModel>(query).ToListAsync(cancellationToken);
         }
         public override async Task<User> GetItemByIdAsync(int id, CancellationToken token)
         {
-            return await _userEntities.Include(x => x.RoleToUsers).ThenInclude(x => x.Role).FirstOrDefaultAsync(x => x.Id == id, token);
+            var query = await _userEntities
+                .TagWith("----------GetItemByIdAsync----------")
+                .Include(x => x.RoleToUsers)
+                .ThenInclude(x => x.Role)
+                .FirstOrDefaultAsync(x => x.Id == id, token);
+
+            return query;
         }
         public async Task<User> GetItemByAliasAsync(string alias, CancellationToken token)
         {
@@ -27,6 +57,12 @@ namespace MyArt.DataAccess.Providers
         public async Task<User> GetItemByEmailAsync(string email, CancellationToken token)
         {
             return await _userEntities.Include(x => x.RoleToUsers).ThenInclude(x => x.Role).Where(x => x.Email == email).FirstOrDefaultAsync(token);
+        } 
+        public async Task<User> GetItemByArtIdAsync(int artId, CancellationToken token)
+        {
+            var result = await _artEntities.Where(x => x.Id == artId).Select(x => x.User).FirstOrDefaultAsync(token);
+
+            return result;
         }
         public async Task<byte[]> GetAvatarAsync(int userId, CancellationToken cancellationToken)
         {

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.SignalR;
 using MyArt.API.ViewModels;
 using MyArt.BusinessLogic.Contracts;
 using MyArt.DataAccess.Contracts;
@@ -16,6 +17,7 @@ namespace MyArt.BusinessLogic.Services
         private readonly IArtRepository _artRepository;
         private readonly ICommentRepository _commentRepository;
         private readonly ICurrentUserService _currentUserService;
+        private readonly IUserProvider _userProvider;
         private readonly IUserService _userService;
         private readonly IColorService _colorService;
         private readonly IMapper _mapper;
@@ -24,6 +26,7 @@ namespace MyArt.BusinessLogic.Services
             IDataContext db,
             IArtRepository artRepository,
             ICommentRepository commentRepository,
+            IUserProvider userProvider,
             IColorService colorService,
             IArtProvider artProvider,
             IUserService userService,
@@ -34,6 +37,7 @@ namespace MyArt.BusinessLogic.Services
             _userService = userService;
             _artProvider = artProvider;
             _colorService = colorService;
+            _userProvider = userProvider;
             _commentRepository = commentRepository;
             _currentUserService = currentUserService;
             _artRepository = artRepository;
@@ -91,7 +95,7 @@ namespace MyArt.BusinessLogic.Services
                 await _artRepository.RemoveLikeAsync(like, cancellationToken);
             }
             else
-            {
+            {  
                 await _artRepository.AddLikeAsync(like, cancellationToken);
             }
 
@@ -110,15 +114,18 @@ namespace MyArt.BusinessLogic.Services
         }
         public async Task<ArtViewModel> GetArtByIdAsync(int artId, CancellationToken cancellationToken)
         {
-            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+            var currentUserId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
 
-            var alias = await _userService.GetAliasByIdAsync(userId, cancellationToken);
+            var user = await _userProvider.GetItemByArtIdAsync(artId, cancellationToken);
+
+            var alias = await _userService.GetAliasByIdAsync(user.Id, cancellationToken);
             var art = await _artProvider.GetItemByIdAsync(artId, cancellationToken);
             var likesCount = await _artProvider.GetLikesCountByIdAsync(artId, cancellationToken);
             var commentsCount = await _artProvider.GetCommentsCountByIdAsync(artId, cancellationToken);
             var comments = await _artProvider.GetCommentsByIdAsync(artId, cancellationToken);
-            var hasLiked = await _artProvider.HasLikedArtByIdAsync(userId, artId, cancellationToken);
-            var arts = await _artProvider.GetAllUserItemsAsync(userId, 0, 10, cancellationToken);
+            var hasLiked = await _artProvider.HasLikedArtByIdAsync(currentUserId, artId, cancellationToken);
+            var hasOnBoard = await _artProvider.HasOnBoardArtByIdAsync(currentUserId, artId, cancellationToken);
+            var arts = await _artProvider.GetAllUserItemsAsync(user.Id, 0, 10, cancellationToken);
 
             var artViewModel = new ArtViewModel()
             {
@@ -139,15 +146,16 @@ namespace MyArt.BusinessLogic.Services
                 LikesCount = likesCount,
                 CommentsCount = commentsCount,
                 HasLiked = hasLiked,
+                HasOnBoard = hasOnBoard,
                 Arts = arts,
                 Comments = comments
             };
 
             return artViewModel;
         }
-        public async Task<List<ShortArtViewModel>> GetAllArtsAsync(int page, int size, CancellationToken cancellationToken)
+        public async Task<List<ShortArtViewModel>> GetAllArtsAsync(int page, int size, int type, CancellationToken cancellationToken)
         {
-            var arts = await _artProvider.GetAllItemsAsync(page, size, cancellationToken);
+            var arts = await _artProvider.GetAllItemsAsync(page, size, type, cancellationToken);
 
             return arts;
         }

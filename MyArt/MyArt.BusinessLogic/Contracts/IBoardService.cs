@@ -11,5 +11,6 @@ namespace MyArt.BusinessLogic.Contracts
         Task AddBoardAsync(CreateBoardViewModel boardVM, CancellationToken cancellationToken);
         Task<UserboardsViewModel> GetAllUserboardsAsync(int artId, CancellationToken cancellationToken);
         Task UpdateUserboardsAsync(int artId, int[] boardIds, CancellationToken cancellationToken);
+        Task<BoardViewModel> GetBoardByIdAsync(int boardId, CancellationToken cancellationToken);
     }
 }

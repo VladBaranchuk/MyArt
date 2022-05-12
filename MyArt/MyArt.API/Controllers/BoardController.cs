@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyArt.API.ViewModels;
 using MyArt.BusinessLogic.Contracts;
@@ -19,6 +18,18 @@ namespace MyArt.API.Controllers
         {
             _httpContextAccessor = httpContextAccessor;
             _boardService = boardService;
+        }
+
+        [Route("{id}")]
+        [HttpGet(Name = nameof(GetBoardById))]
+        public async Task<ActionResult<BoardViewModel>> GetBoardById(int id)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _boardService.GetBoardByIdAsync(id, cancellationToken);
+
+            return Ok(result);
         }
 
         [Route("all")]

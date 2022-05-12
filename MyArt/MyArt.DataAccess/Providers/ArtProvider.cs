@@ -17,6 +17,7 @@ namespace MyArt.DataAccess.Providers
     {
         private readonly DbSet<Art> _artEntities;
         private readonly DbSet <LikeArts>_likeArtsEntities;
+        private readonly DbSet<ArtToBoard> _artToBoardsEntities;
         private readonly DbSet<ArtComments> _artCommentsEntities;
         private readonly DbSet<Comment> _commentEntities;
         private readonly IMapper _mapper;
@@ -28,6 +29,7 @@ namespace MyArt.DataAccess.Providers
             _artEntities = dataProvider.GetSet<Art>();
             _likeArtsEntities = dataProvider.GetSet<LikeArts>();
             _artCommentsEntities = dataProvider.GetSet<ArtComments>();
+            _artToBoardsEntities = dataProvider.GetSet<ArtToBoard>();
         }
         public async Task<List<CommentViewModel>> GetCommentsByIdAsync(int id, CancellationToken cancellationToken)
         {
@@ -59,12 +61,19 @@ namespace MyArt.DataAccess.Providers
         {
             return await _artEntities.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
-        public async Task<List<ShortArtViewModel>> GetAllItemsAsync(int page, int size, CancellationToken cancellationToken)
+        public async Task<List<ShortArtViewModel>> GetAllItemsAsync(int page, int size, int type, CancellationToken cancellationToken)
         {
             var query = _artEntities
                 .OrderBy(x => x.Id)
                 .Skip(page * size)
-                .Take(size)
+                .Take(size);
+
+            if (type != 0)
+            {
+                query = query.Where(x => x.Type == (EType)type);
+            }
+
+            var result = query
                 .Select(x => new ShortArtViewModel()
                 {
                     Id = x.Id,
@@ -76,7 +85,7 @@ namespace MyArt.DataAccess.Providers
                     DarkColor = x.DarkColor
                 });
 
-            return await _mapper.ProjectTo<ShortArtViewModel>(query).ToListAsync(cancellationToken);
+            return await _mapper.ProjectTo<ShortArtViewModel>(result).ToListAsync(cancellationToken);
         }
         public async Task<int> GetLikesCountByIdAsync(int id, CancellationToken cancellationToken)
         {
@@ -90,6 +99,14 @@ namespace MyArt.DataAccess.Providers
                .AnyAsync(x => x.UserId == userId, cancellationToken);
 
             return hasLiked;
+        }
+        public async Task<bool> HasOnBoardArtByIdAsync(int userId, int artId, CancellationToken cancellationToken)
+        {
+            var hasOnBoard = await _artToBoardsEntities
+               .Where(x => x.Board.UserId == userId)
+               .AnyAsync(x => x.ArtId == artId, cancellationToken);
+
+            return hasOnBoard;
         }
         public async Task<List<ShortArtViewModel>> GetAllUserItemsAsync(int userId, int page, int size, CancellationToken cancellationToken)
         {
@@ -111,11 +128,32 @@ namespace MyArt.DataAccess.Providers
 
             return await _mapper.ProjectTo<ShortArtViewModel>(query).ToListAsync(cancellationToken);
         }
+        public async Task<List<ShortArtViewModel>> GetAllBoardItemsAsync(int boardId, int page, int size, CancellationToken cancellationToken)
+        {
+            var query = _artToBoardsEntities
+                .Where(x => x.BoardId == boardId)
+                .Select(x=> x.Art)
+                .OrderBy(x => x)
+                .Skip(page * size)
+                .Take(size)
+                .Select(x => new ShortArtViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Year = x.Year,
+                    Alias = x.User.Alias,
+                    BrightColor = x.BrightColor,
+                    MutedColor = x.MutedColor,
+                    DarkColor = x.DarkColor
+                });
+
+            return await _mapper.ProjectTo<ShortArtViewModel>(query).ToListAsync(cancellationToken);
+        }
         public async Task<List<ShortArtViewModel>> GetAllByArtsFilterAsync(ArtFilterViewModel filter, int page, int size, CancellationToken cancellationToken)
         {
             var query = _artEntities.AsQueryable();
 
-            if (filter.Year != null && filter.Year != "")
+            if (!String.IsNullOrEmpty(filter.Year))
             {
                 query = query.Where(x => Convert.ToInt32(filter.Year) == Convert.ToInt32(x.Year));
             }
@@ -135,10 +173,11 @@ namespace MyArt.DataAccess.Providers
                 query = query.OrderBy(x => x.LikeArts.Count());
             }
 
-            if (filter.Type.HasValue)
+            if (filter.Type.HasValue && filter.Type.Value != 0)
             {
                 query = query.Where(x => x.Type == (EType)filter.Type.Value);
             }
+           
 
             var resultQuery = query
                 .Skip(page * size)

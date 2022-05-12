@@ -69,6 +69,19 @@ namespace MyArt.BusinessLogic.Services
 
             return alias;
         }
+        public async Task<List<AuthorViewModel>> GetAllAuthorsAsync(int page, int size, CancellationToken cancellationToken)
+        {
+            var authors = await _userProvider.GetAllItemsAsync(page, size, cancellationToken);
+
+            foreach(var author in authors)
+            {
+                var arts = await _artProvider.GetAllUserItemsAsync(author.Id, 0, 4, cancellationToken);
+
+                author.Arts = arts;
+            }
+
+            return authors;
+        }
         public async Task<UserViewModel> GetUserByIdAsync(int id, CancellationToken cancellationToken)
         {
             var user = await _userProvider.GetItemByIdAsync(id, cancellationToken);

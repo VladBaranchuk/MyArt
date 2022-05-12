@@ -1,17 +1,21 @@
 ﻿
+using BenchmarkDotNet.Attributes;
 using MyArt.API.ViewModels;
 using MyArt.BusinessLogic.Contracts;
 using MyArt.DataAccess.Contracts;
 using MyArt.DataAccess.Contracts.Providers;
 using MyArt.DataAccess.Contracts.Repositories;
 using MyArt.Domain.Entities;
+using System.Diagnostics;
 
 namespace MyArt.BusinessLogic.Services
 {
     public class BoardService : IBoardService
     {
         private readonly IDataContext _db;
+        private readonly IUserProvider _userProvider;
         private readonly IBoardProvider _boardProvider;
+        private readonly IArtProvider _artProvider;
         private readonly IBoardRepository _boardRepository;
         private readonly ICurrentUserService _currentUserService;
 
@@ -19,9 +23,13 @@ namespace MyArt.BusinessLogic.Services
             IDataContext dataContext,
             IBoardProvider boardProvider,
             IBoardRepository boardRepository,
+            IArtProvider artProvider,
+            IUserProvider userProvider,
             ICurrentUserService currentUserService)
         {
             _db = dataContext;
+            _userProvider = userProvider;
+            _artProvider = artProvider;
             _boardProvider = boardProvider;
             _boardRepository = boardRepository;
             _currentUserService = currentUserService;
@@ -49,6 +57,44 @@ namespace MyArt.BusinessLogic.Services
             }
 
             await _db.SaveChangesAsync(cancellationToken);
+        }
+
+        
+        public async Task<BoardViewModel> GetBoardByIdAsync(int boardId, CancellationToken cancellationToken)
+        {
+            Stopwatch stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            var user = await _userProvider.GetItemByIdAsync(userId, cancellationToken);
+            var board = await _boardProvider.GetItemByIdAsync(boardId, cancellationToken);
+            var likesCount = await _boardProvider.GetLikesCountByIdAsync(boardId, cancellationToken); 
+            var hasLiked = await _boardProvider.HasLikedBoardByIdAsync(userId, boardId, cancellationToken);
+            var firstId = await _boardProvider.GetFirstArtIdFromBoardAsync(boardId, cancellationToken);
+            var art = await _artProvider.GetItemByIdAsync(firstId, cancellationToken);
+            var arts = await _artProvider.GetAllBoardItemsAsync(boardId, 0, 10, cancellationToken);
+            stopwatch.Stop();
+
+            var artViewModel = new BoardViewModel()
+            {
+                Id = board.Id,
+                Name = board.Name,
+                Alias = user.Alias,
+                FirstId = firstId,
+                BrightColor = art.BrightColor,
+                DarkColor = art.DarkColor,
+                MutedColor = art.MutedColor,
+                LikesCount = likesCount,
+                ShareCount = board.ShareCount,
+                HasLiked = hasLiked,
+                Arts = arts
+            };
+            
+
+            Console.WriteLine("Количество времени: " + stopwatch.ElapsedMilliseconds);
+
+            return artViewModel;
         }
         public async Task<List<ShortBoardViewModel>> GetAllBoardsAsync(int page, int size, CancellationToken cancellationToken)
         {

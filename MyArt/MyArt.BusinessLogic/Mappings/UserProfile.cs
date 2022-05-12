@@ -24,6 +24,7 @@ namespace MyArt.BusinessLogic.Mappings
                );
 
             CreateMap<User, UpdatePublicUserInfoViewModel>();
+            CreateMap<AuthorViewModel, AuthorViewModel>();
         }
     }
 }

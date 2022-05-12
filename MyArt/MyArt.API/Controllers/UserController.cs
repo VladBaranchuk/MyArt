@@ -46,6 +46,17 @@ namespace MyArt.API.Controllers
             return Ok(result);
         }
 
+        
+        [Route("all")]
+        [HttpPost(Name = nameof(GetAuthors))]
+        public async Task<ActionResult<List<AuthorViewModel>>> GetAuthors([FromQuery] int page = 0, [FromQuery] int size = 15)
+        {
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _userService.GetAllAuthorsAsync(page, size, cancellationToken);
+
+            return Ok(result);
+        }
+
         [Authorize]
         [Route("cabinet")]
         [HttpGet(Name = nameof(GetCabinet))]
