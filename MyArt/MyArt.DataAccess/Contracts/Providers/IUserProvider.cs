@@ -14,5 +14,6 @@ namespace MyArt.DataAccess.Contracts.Providers
         Task<User> GetItemByAliasAsync(string alias, CancellationToken token);
         Task<User> GetItemByArtIdAsync(int artId, CancellationToken token);
         Task<List<AuthorViewModel>> GetAllItemsAsync(int page, int size, CancellationToken cancellationToken);
+        Task<List<AuthorViewModel>> GetAllByAuthorsFilterAsync(AuthorFilterViewModel filter, int page, int size, CancellationToken cancellationToken);
     }
 }

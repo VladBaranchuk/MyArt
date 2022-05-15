@@ -232,5 +232,18 @@ namespace MyArt.BusinessLogic.Services
 
             return accountVM;
         }
+        public async Task<List<AuthorViewModel>> GetAllByAuthorsFilterAsync(AuthorFilterViewModel filter, int page, int size, CancellationToken cancellationToken)
+        {
+            var authors = await _userProvider.GetAllByAuthorsFilterAsync(filter, page, size, cancellationToken);
+
+            foreach (var author in authors)
+            {
+                var arts = await _artProvider.GetAllUserItemsAsync(author.Id, 0, 4, cancellationToken);
+
+                author.Arts = arts;
+            }
+
+            return authors;
+        }
     }
 }

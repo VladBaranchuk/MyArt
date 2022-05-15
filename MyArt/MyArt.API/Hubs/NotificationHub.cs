@@ -22,21 +22,16 @@ namespace MyArt.API.Hubs
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             var result = await _notificationService.AddLikeNotificationAsync(Convert.ToInt32(artId), cancellationToken);
 
-            await Clients.User(result.UserId).SendAsync("Like", result.Message);
-            //await Clients.All.SendAsync("Like", result.Message);
+            await Clients.User(result.UserId).SendAsync("Message", result.Message);
         }
 
-        public override async Task OnConnectedAsync()
+        [Authorize]
+        public async Task Comment(string artId)
         {
-            await Clients.Users(new string[] {"1", "3"}).SendAsync("Notify", $"{Context.User?.Identity?.Name} вошел");
-            await base.OnConnectedAsync();
-        }
-        public override async Task OnDisconnectedAsync(Exception exception)
-        {
-            await Clients.Users(new string[] { "1", "3" }).SendAsync("Notify", $"{Context.User?.Identity?.Name} ушел");
-            await base.OnDisconnectedAsync(exception);
-        }
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _notificationService.AddCommentNotificationAsync(Convert.ToInt32(artId), cancellationToken);
 
-
+            await Clients.User(result.UserId).SendAsync("Message", result.Message);
+        }
     }
 }

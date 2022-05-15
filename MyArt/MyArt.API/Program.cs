@@ -15,8 +15,6 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-
-
 var jwtConfig = new JwtOptions();
 
 // Add services to the container.
@@ -89,6 +87,7 @@ builder.Services.AddScoped<IArtService, ArtService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IColorService, ColorService>();
 builder.Services.AddScoped<IBoardService, BoardService>();
+builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddCors(options =>

@@ -14,5 +14,6 @@ namespace MyArt.DataAccess.Contracts.Providers
         Task<List<UserboardViewModel>> GetAllUserboardsAsync(int userId, int artId, CancellationToken cancellationToken);
         Task<int> GetLikesCountByIdAsync(int boardId, CancellationToken cancellationToken);
         Task<int> GetFirstArtIdFromBoardAsync(int boardId, CancellationToken cancellationToken);
+        Task<User> GetUserByBoardIdAsync(int boardId, CancellationToken cancellationToken);
     }
 }

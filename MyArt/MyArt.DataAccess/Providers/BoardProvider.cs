@@ -102,5 +102,9 @@ namespace MyArt.DataAccess.Providers
         {
             return await _boardEntities.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
+        public async Task<User> GetUserByBoardIdAsync(int boardId, CancellationToken cancellationToken)
+        {
+            return await _boardEntities.Where(x => x.Id == boardId).Select(x => x.User).FirstOrDefaultAsync(cancellationToken);
+        }
     }
 }

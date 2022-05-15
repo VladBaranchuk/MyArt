@@ -4,6 +4,7 @@ using MyArt.API.ViewModels;
 using MyArt.DataAccess.Contracts;
 using MyArt.DataAccess.Contracts.Providers;
 using MyArt.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -76,6 +77,40 @@ namespace MyArt.DataAccess.Providers
         public Task<bool> HasAnyByEmailAsync(string email, CancellationToken token)
         {
             return _userEntities.AnyAsync(x => x.Email == email, token);
+        }
+        public async Task<List<AuthorViewModel>> GetAllByAuthorsFilterAsync(AuthorFilterViewModel filter, int page, int size, CancellationToken cancellationToken)
+        {
+            var query = _userEntities.AsQueryable();
+
+            if (filter.Type.HasValue && filter.Type.Value == 0)
+            {
+                query = query.OrderBy(x => x.FirstName);
+            }
+
+            if (filter.Type.HasValue && filter.Type.Value == 1)
+            {
+                query = query.OrderByDescending(x => x.FirstName);
+            }
+
+            if (!String.IsNullOrEmpty(filter.searchString))
+            {
+                query = query.Where(x => (x.FirstName + " " + x.LastName).Contains(filter.searchString));
+            }
+
+            var resultQuery = query
+                .Skip(page * size)
+                .Take(size)
+                .Select(x => new AuthorViewModel()
+                {
+                    Id = x.Id,
+                    FirstName = x.FirstName,
+                    LastName = x.LastName,
+                    Alias = x.Alias
+                });
+
+            var result = await _mapper.ProjectTo<AuthorViewModel>(resultQuery).ToListAsync(cancellationToken);
+
+            return result;
         }
     }
 }

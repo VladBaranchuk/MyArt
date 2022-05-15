@@ -34,5 +34,21 @@ namespace MyArt.BusinessLogic.Services
 
             return notification;
         }
+
+        public async Task<NotificationViewModel> AddCommentNotificationAsync(int artId, CancellationToken cancellationToken)
+        {
+            var currentUserId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            var currentUser = await _userProvider.GetItemByIdAsync(currentUserId, cancellationToken);
+            var user = await _userProvider.GetItemByArtIdAsync(artId, cancellationToken);
+
+            var notification = new NotificationViewModel()
+            {
+                UserId = user.Id.ToString(),
+                Message = $"Пользователь с ником {currentUser.Alias} прокомментировал вашу работу"
+            };
+
+            return notification;
+        }
     }
 }

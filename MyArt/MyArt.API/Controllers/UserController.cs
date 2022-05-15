@@ -57,6 +57,18 @@ namespace MyArt.API.Controllers
             return Ok(result);
         }
 
+        [Route("filter")]
+        [HttpPut(Name = nameof(GetFilterAuthors))]
+        public async Task<ActionResult<AuthorViewModel>> GetFilterAuthors([FromForm] AuthorFilterViewModel authorFilterViewModel, [FromQuery] int page = 0, [FromQuery] int size = 10)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _userService.GetAllByAuthorsFilterAsync(authorFilterViewModel, page, size, cancellationToken);
+
+            return Ok(result);
+        }
+
         [Authorize]
         [Route("cabinet")]
         [HttpGet(Name = nameof(GetCabinet))]

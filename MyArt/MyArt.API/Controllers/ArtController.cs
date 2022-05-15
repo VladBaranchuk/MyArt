@@ -116,7 +116,6 @@ namespace MyArt.API.Controllers
             return File(result, MediaTypeNames.Image.Jpeg);
         }
 
-        [Authorize]
         [Route("sale/{id}")]
         [HttpPut(Name = nameof(BuyArt))]
         public async Task<IActionResult> BuyArt(int id)
