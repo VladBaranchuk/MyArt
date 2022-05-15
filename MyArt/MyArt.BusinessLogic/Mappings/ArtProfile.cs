@@ -10,7 +10,11 @@ namespace MyArt.BusinessLogic.Mappings
         {
             CreateMap<ShortArtViewModel, ShortArtViewModel>();
 
-            CreateMap<Comment, CommentViewModel>();
+            CreateMap<Comment, CommentViewModel>()
+                .ForMember(
+                    opt => opt.Date,
+                    dest => dest.MapFrom(x => x.Date.ToString("d"))
+                );
         }
     }
 }

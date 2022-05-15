@@ -45,7 +45,7 @@ namespace MyArt.DataAccess.Providers
                     Id = x.Id,
                     UserId = x.ArtComments.Where(x => x.ArtId == id).Select(x => x.User.Id).FirstOrDefault(),
                     Text = x.Text,
-                    Date = x.Date,
+                    Date = x.Date.ToString("d"),
                     Alias = x.ArtComments.Where(x => x.ArtId == id).Select(x => x.User.Alias).FirstOrDefault()
                 });
 

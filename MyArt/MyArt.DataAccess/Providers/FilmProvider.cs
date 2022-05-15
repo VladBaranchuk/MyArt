@@ -54,7 +54,7 @@ namespace MyArt.DataAccess.Providers
                 .Select(x => new CommentViewModel()
                 {
                     Text = x.Text,
-                    Date = x.Date,
+                    Date = x.Date.ToString("d"),
                     Alias = x.FilmComments.Where(x => x.FilmId == id).Select(x => x.User.Alias).FirstOrDefault()
                 });
 
