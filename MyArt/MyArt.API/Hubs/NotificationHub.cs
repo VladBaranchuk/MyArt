@@ -22,7 +22,10 @@ namespace MyArt.API.Hubs
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             var result = await _notificationService.AddLikeNotificationAsync(Convert.ToInt32(artId), cancellationToken);
 
-            await Clients.User(result.UserId).SendAsync("Message", result.Message);
+            if(result.CurrentUserId != result.UserId)
+            {
+                await Clients.User(result.UserId.ToString()).SendAsync("Message", result.Message);
+            } 
         }
 
         [Authorize]
@@ -31,7 +34,10 @@ namespace MyArt.API.Hubs
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             var result = await _notificationService.AddCommentNotificationAsync(Convert.ToInt32(artId), cancellationToken);
 
-            await Clients.User(result.UserId).SendAsync("Message", result.Message);
+            if (result.CurrentUserId != result.UserId)
+            {
+                await Clients.User(result.UserId.ToString()).SendAsync("Message", result.Message);
+            }
         }
     }
 }

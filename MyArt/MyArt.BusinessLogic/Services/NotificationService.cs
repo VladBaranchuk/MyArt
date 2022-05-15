@@ -28,8 +28,9 @@ namespace MyArt.BusinessLogic.Services
 
             var notification = new NotificationViewModel()
             {
-                UserId = user.Id.ToString(),
-                Message = $"Пользователь с ником {currentUser.Alias} оценил вашу работу"
+                UserId = user.Id,
+                Message = $"Пользователь с ником {currentUser.Alias} оценил вашу работу",
+                CurrentUserId = currentUserId
             };
 
             return notification;
@@ -44,8 +45,9 @@ namespace MyArt.BusinessLogic.Services
 
             var notification = new NotificationViewModel()
             {
-                UserId = user.Id.ToString(),
-                Message = $"Пользователь с ником {currentUser.Alias} прокомментировал вашу работу"
+                UserId = user.Id,
+                Message = $"Пользователь с ником {currentUser.Alias} оценил вашу работу",
+                CurrentUserId = currentUserId
             };
 
             return notification;
