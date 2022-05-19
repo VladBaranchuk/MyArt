@@ -19,6 +19,7 @@ namespace MyArt.DataAccess.Providers
         private readonly DbSet <LikeArts>_likeArtsEntities;
         private readonly DbSet<ArtToBoard> _artToBoardsEntities;
         private readonly DbSet<ArtComments> _artCommentsEntities;
+        private readonly DbSet<ArtFormToArt> _artFormToArtEntities;
         private readonly DbSet<Comment> _commentEntities;
         private readonly IMapper _mapper;
 
@@ -28,6 +29,7 @@ namespace MyArt.DataAccess.Providers
             _commentEntities = dataProvider.GetSet<Comment>();
             _artEntities = dataProvider.GetSet<Art>();
             _likeArtsEntities = dataProvider.GetSet<LikeArts>();
+            _artFormToArtEntities = dataProvider.GetSet<ArtFormToArt>();
             _artCommentsEntities = dataProvider.GetSet<ArtComments>();
             _artToBoardsEntities = dataProvider.GetSet<ArtToBoard>();
         }
@@ -170,14 +172,23 @@ namespace MyArt.DataAccess.Providers
 
             if (filter.Popular)
             {
-                query = query.OrderBy(x => x.LikeArts.Count());
+                query = query.OrderByDescending(x => x.LikeArts.Count());
             }
 
             if (filter.Type.HasValue && filter.Type.Value != 0)
             {
                 query = query.Where(x => x.Type == (EType)filter.Type.Value);
             }
-           
+
+            if (!String.IsNullOrEmpty(filter.ArtForm))
+            {
+                query = query.Where(x => x.ArtFormToArts.Any(x => x.ArtForm.Name == filter.ArtForm));
+            }
+
+            if (!String.IsNullOrEmpty(filter.Material))
+            {
+                query = query.Where(x => x.Material == filter.Material);
+            }
 
             var resultQuery = query
                 .Skip(page * size)

@@ -88,6 +88,7 @@ builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IColorService, ColorService>();
 builder.Services.AddScoped<IBoardService, BoardService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
+builder.Services.AddScoped<IArtFormService, ArtFormService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddCors(options =>

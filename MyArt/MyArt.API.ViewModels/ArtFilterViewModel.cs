@@ -7,6 +7,8 @@ namespace MyArt.API.ViewModels
         public int? MinPrice { get; set; }
         public int? MaxPrice { get; set; }
         public bool Popular { get; set; }
+        public string? Material { get; set; }
+        public string? ArtForm { get; set; }
         public int? Type { get; set; }
     }
 }

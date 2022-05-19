@@ -16,6 +16,8 @@ namespace MyArt.BusinessLogic.Services
         private readonly IArtProvider _artProvider;
         private readonly IArtRepository _artRepository;
         private readonly ICommentRepository _commentRepository;
+        private readonly IArtFormRepository _artFormRepository;
+        private readonly IArtFormProvider _artFormProvider;
         private readonly ICurrentUserService _currentUserService;
         private readonly IUserProvider _userProvider;
         private readonly IUserService _userService;
@@ -26,6 +28,8 @@ namespace MyArt.BusinessLogic.Services
             IDataContext db,
             IArtRepository artRepository,
             ICommentRepository commentRepository,
+            IArtFormRepository artFormRepository,
+            IArtFormProvider artFormProvider,
             IUserProvider userProvider,
             IColorService colorService,
             IArtProvider artProvider,
@@ -37,6 +41,8 @@ namespace MyArt.BusinessLogic.Services
             _userService = userService;
             _artProvider = artProvider;
             _colorService = colorService;
+            _artFormRepository = artFormRepository;
+            _artFormProvider = artFormProvider;
             _userProvider = userProvider;
             _commentRepository = commentRepository;
             _currentUserService = currentUserService;
@@ -177,6 +183,8 @@ namespace MyArt.BusinessLogic.Services
         {
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
 
+            var artformId = await _artFormProvider.GetIdByItemAsync(createArtVM.ArtForm, cancellationToken);
+
             byte[] artData = null;
             using (var binaryReader = new BinaryReader(createArtVM.Image.OpenReadStream()))
             {
@@ -199,12 +207,16 @@ namespace MyArt.BusinessLogic.Services
                 Visible = EVisible.IsVisible,
                 Moderation = EModeration.NotModerated,
                 Type = (EType)createArtVM.Type,
+                Material = createArtVM.Material,
                 Date = DateTime.Now,
                 Data = artData,
                 UserId = userId
             };
 
             await _artRepository.CreateAsync(art, cancellationToken);
+
+            await _artFormRepository.AddArtAndArtFormAsync(art, artformId, cancellationToken);
+
             await _db.SaveChangesAsync(cancellationToken);
         }
         public async Task<byte[]> GetImageAsync(int artId, CancellationToken cancellationToken)

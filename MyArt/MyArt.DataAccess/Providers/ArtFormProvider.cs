@@ -2,6 +2,7 @@
 using MyArt.DataAccess.Contracts;
 using MyArt.DataAccess.Contracts.Providers;
 using MyArt.Domain.Entities;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,6 +20,11 @@ namespace MyArt.DataAccess.Providers
         public async override Task<ArtForm> GetItemByIdAsync(int id, CancellationToken cancellationToken)
         {
             return await _artFormEntities.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        }
+
+        public async Task<int> GetIdByItemAsync(string name, CancellationToken cancellationToken)
+        {var item = await _artFormEntities.Where(x => x.Name == name).FirstOrDefaultAsync(cancellationToken);
+            return item.Id;
         }
     }
 }

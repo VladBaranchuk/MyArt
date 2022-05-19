@@ -26,6 +26,7 @@ namespace MyArt.DataAccess.Configurations
             builder.Property(x => x.Visible).IsRequired().HasDefaultValue(EVisible.IsVisible);
             builder.Property(x => x.Moderation).IsRequired().HasDefaultValue(EModeration.Moderated);
             builder.Property(x => x.Type).IsRequired();
+            builder.Property(x => x.Material).IsRequired(false);
             builder.Property(x => x.Date).IsRequired().HasDefaultValue(DateTime.Now);
 
             builder.HasOne(x => x.User).WithMany(x => x.Arts).HasForeignKey(x => x.UserId);

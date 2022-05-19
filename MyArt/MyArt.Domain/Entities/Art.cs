@@ -19,6 +19,7 @@ namespace MyArt.Domain.Entities
         public EType Type { get; set; }
         public DateTime Date { get; set; }
         public byte[] Data { get; set; }
+        public string Material { get; set; }
         public int UserId { get; set; }
 
         public User User { get; set; }

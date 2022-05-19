@@ -12,7 +12,6 @@ namespace MyArt.DataAccess.Repositories
     {
         private readonly DbSet<RoleToUser> _roleToUserEntities;
         private readonly DbSet<Role> _roleEntities;
-        
 
         public RoleRepository(IDataProvider dataProvider) : base(dataProvider)
         {
