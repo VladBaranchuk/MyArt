@@ -84,12 +84,12 @@ namespace MyArt.DataAccess.Providers
 
             if (filter.Type.HasValue && filter.Type.Value == 0)
             {
-                query = query.OrderBy(x => x.FirstName);
+                query = query.OrderBy(x => x.LastName);
             }
 
             if (filter.Type.HasValue && filter.Type.Value == 1)
             {
-                query = query.OrderByDescending(x => x.FirstName);
+                query = query.OrderByDescending(x => x.LastName);
             }
 
             if (!String.IsNullOrEmpty(filter.searchString))
