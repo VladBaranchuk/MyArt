@@ -183,7 +183,12 @@ namespace MyArt.BusinessLogic.Services
         {
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
 
-            var artformId = await _artFormProvider.GetIdByItemAsync(createArtVM.ArtForm, cancellationToken);
+            int artformId = 0;
+
+            if (createArtVM.Type == 3)
+            {
+                artformId = await _artFormProvider.GetIdByItemAsync(createArtVM.ArtForm, cancellationToken);
+            }
 
             byte[] artData = null;
             using (var binaryReader = new BinaryReader(createArtVM.Image.OpenReadStream()))
@@ -202,7 +207,7 @@ namespace MyArt.BusinessLogic.Services
                 ShareCount = 0,
                 Price = createArtVM.Price,
                 Month = (EMonth)createArtVM.Month,
-                Year = createArtVM.Year,
+                Year = createArtVM.Year.ToString(),
                 SellingAvailability = ESellingAvailability.Available,
                 Visible = EVisible.IsVisible,
                 Moderation = EModeration.NotModerated,
@@ -216,7 +221,10 @@ namespace MyArt.BusinessLogic.Services
 
             await _artRepository.CreateAsync(art, cancellationToken);
 
-            await _artFormRepository.AddArtAndArtFormAsync(art, artformId, cancellationToken);
+            if (createArtVM.Type == 3)
+            {
+                await _artFormRepository.AddArtAndArtFormAsync(art, artformId, cancellationToken);
+            }
 
             await _db.SaveChangesAsync(cancellationToken);
         }

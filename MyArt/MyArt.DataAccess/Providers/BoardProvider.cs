@@ -4,6 +4,7 @@ using MyArt.API.ViewModels;
 using MyArt.DataAccess.Contracts;
 using MyArt.DataAccess.Contracts.Providers;
 using MyArt.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -105,6 +106,43 @@ namespace MyArt.DataAccess.Providers
         public async Task<User> GetUserByBoardIdAsync(int boardId, CancellationToken cancellationToken)
         {
             return await _boardEntities.Where(x => x.Id == boardId).Select(x => x.User).FirstOrDefaultAsync(cancellationToken);
+        }
+
+        public async Task<List<ShortBoardViewModel>> GetAllByBoardsFilterAsync(BoardFilterViewModel filter, int page, int size, CancellationToken cancellationToken)
+        {
+            var query = _boardEntities.AsQueryable();
+
+            if (filter.Type.HasValue && filter.Type.Value == 0)
+            {
+                query = query.OrderBy(x => x.Name);
+            }
+
+            if (filter.Type.HasValue && filter.Type.Value == 1)
+            {
+                query = query.OrderByDescending(x => x.Name);
+            }
+
+            if (!String.IsNullOrEmpty(filter.searchString))
+            {
+                query = query.Where(x => x.Name.Contains(filter.searchString));
+            }
+
+            var resultQuery = query
+                .Skip(page * size)
+                .Take(size)
+                .Select(x => new ShortBoardViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Alias = x.User.Alias,
+                    FirstId = x.ArtToBoards.FirstOrDefault().ArtId,
+                    ShareCount = (int)x.ShareCount,
+                    LikesCount = x.LikeBoards.Count()
+                });
+
+            var result = await _mapper.ProjectTo<ShortBoardViewModel>(resultQuery).ToListAsync(cancellationToken);
+
+            return result;
         }
     }
 }

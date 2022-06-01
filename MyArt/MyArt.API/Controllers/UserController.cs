@@ -18,11 +18,13 @@ namespace MyArt.API.Controllers
         private readonly IJwtService _jwtService;
         private readonly IValidator<RegisterViewModel> _registerValidator;
         private readonly IValidator<AuthenticationViewModel> _authValidator;
+        private readonly IValidator<UpdatePublicUserInfoViewModel> _updateValidator;
 
         public UserController(
             IHttpContextAccessor httpContextAccessor,
             IValidator<RegisterViewModel> registerValidator,
             IValidator<AuthenticationViewModel> authValidator,
+            IValidator<UpdatePublicUserInfoViewModel> updateValidator,
             ICurrentUserService currenUserService,
             IJwtService jwtService,
             IUserService userService)
@@ -33,6 +35,7 @@ namespace MyArt.API.Controllers
             _authValidator = authValidator;
             _jwtService = jwtService;
             _currentUserService = currenUserService;
+            _updateValidator = updateValidator;
         }
 
         [Authorize]
@@ -120,7 +123,7 @@ namespace MyArt.API.Controllers
         [HttpPut(Name = nameof(UpdatePublicUserInfo))]
         public async Task<ActionResult<UpdatePublicUserInfoViewModel>> UpdatePublicUserInfo(UpdatePublicUserInfoViewModel updatePublicUserInfoVM)
         {
-            //_authValidator.ValidateAndThrow(authVM);
+            _updateValidator.ValidateAndThrow(updatePublicUserInfoVM);
 
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             var result = await _userService.UpdatePublicUserInfoAsync(updatePublicUserInfoVM, cancellationToken);

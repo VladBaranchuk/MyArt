@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyArt.API.ViewModels;
 using MyArt.BusinessLogic.Contracts;
@@ -12,13 +13,19 @@ namespace MyArt.API.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IArtService _artService;
+        private readonly IValidator<ArtFilterViewModel> _filterValidator;
+        private readonly IValidator<CreateArtViewModel> _createValidator;
 
         public ArtController(
             IHttpContextAccessor httpContextAccessor,
-            IArtService artService)
+            IArtService artService,
+            IValidator<CreateArtViewModel> createValidator,
+            IValidator<ArtFilterViewModel> filterValidator)
         {
             _httpContextAccessor = httpContextAccessor;
             _artService = artService;
+            _createValidator = createValidator;
+            _filterValidator = filterValidator;
         }
 
         [Route("{id}")]
@@ -61,7 +68,7 @@ namespace MyArt.API.Controllers
         [HttpPut(Name = nameof(GetFilterArts))]
         public async Task<ActionResult<ShortArtViewModel>> GetFilterArts([FromForm] ArtFilterViewModel artFilterViewModel, [FromQuery] int page = 0, [FromQuery] int size = 10)
         {
-            //_authValidator.ValidateAndThrow(authVM);
+            _filterValidator.ValidateAndThrow(artFilterViewModel);
 
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             var result = await _artService.GetAllByArtsFilterAsync(artFilterViewModel, page, size, cancellationToken);
@@ -112,6 +119,8 @@ namespace MyArt.API.Controllers
         [HttpPost(Name = nameof(AddArt))]
         public async Task<IActionResult> AddArt([FromForm] CreateArtViewModel img)
         {
+            _createValidator.ValidateAndThrow(img);
+
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             await _artService.AddArtAsync(img, cancellationToken);
 

@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MyArt.API.Validations;
 using MyArt.API.ViewModels;
 using MyArt.BusinessLogic.Contracts;
 
@@ -11,13 +13,16 @@ namespace MyArt.API.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IBoardService _boardService;
+        private readonly IValidator<CreateBoardViewModel> _addBoardValidator;
 
         public BoardController(
             IHttpContextAccessor httpContextAccessor,
+            IValidator<CreateBoardViewModel> addBoardValidator,
             IBoardService boardService)
         {
             _httpContextAccessor = httpContextAccessor;
             _boardService = boardService;
+            _addBoardValidator = addBoardValidator;
         }
 
         [Route("{id}")]
@@ -52,6 +57,18 @@ namespace MyArt.API.Controllers
 
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             var result = await _boardService.GetAllUserBoardsAsync(page, size, cancellationToken);
+
+            return Ok(result);
+        }
+
+        [Route("filter")]
+        [HttpPut(Name = nameof(GetFilterBoards))]
+        public async Task<ActionResult<ShortBoardViewModel>> GetFilterBoards([FromForm] BoardFilterViewModel boardFilterViewModel, [FromQuery] int page = 0, [FromQuery] int size = 10)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _boardService.GetAllByBoardsFilterAsync(boardFilterViewModel, page, size, cancellationToken);
 
             return Ok(result);
         }
@@ -111,7 +128,7 @@ namespace MyArt.API.Controllers
         [HttpPost(Name = nameof(AddBoard))]
         public async Task<IActionResult> AddBoard(CreateBoardViewModel createBoardViewModel)
         {
-            //_authValidator.ValidateAndThrow(authVM);
+            _addBoardValidator.ValidateAndThrow(createBoardViewModel);
 
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             await _boardService.AddBoardAsync(createBoardViewModel, cancellationToken);

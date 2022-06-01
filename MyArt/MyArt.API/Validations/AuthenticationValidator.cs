@@ -10,10 +10,10 @@ namespace MyArt.API.Validations
         {
             RuleFor(x => x.Password)
                .Must(x => x.Length >= 2 && x.Length <= 20)
-               .WithMessage("Поле должно быть от 2 до 20 символов");
+               .WithMessage("Поле 'Пароль' должно содержать от 2 до 19 символов");
 
             RuleFor(x => x.Email)
-                .EmailAddress().WithMessage("Поле не является адерсом электронной почты")
+                .EmailAddress().WithMessage("Поле 'Email' не соответствует адресу электронной почты")
                 .MustAsync(async (email, token) =>
                 {
                     var hasAny = await userService.HasAnyByEmailAsync(email, token);

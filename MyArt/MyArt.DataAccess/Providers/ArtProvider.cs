@@ -164,7 +164,7 @@ namespace MyArt.DataAccess.Providers
         {
             var query = _artEntities.AsQueryable();
 
-            if (!String.IsNullOrEmpty(filter.Year))
+            if (filter.Year != null)
             {
                 query = query.Where(x => Convert.ToInt32(filter.Year) == Convert.ToInt32(x.Year));
             }

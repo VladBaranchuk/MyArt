@@ -79,6 +79,10 @@ namespace MyArt.API.Infrastructure.Configurations
         {
             services.AddScoped<IValidator<RegisterViewModel>, RegisterValidator>();
             services.AddScoped<IValidator<AuthenticationViewModel>, AuthenticationValidator>();
+            services.AddScoped<IValidator<ArtFilterViewModel>, ArtFilterValidator>();
+            services.AddScoped<IValidator<UpdatePublicUserInfoViewModel>, UpdateUserValidator>();
+            services.AddScoped<IValidator<CreateArtViewModel>, AddArtValidator>();
+            services.AddScoped<IValidator<CreateBoardViewModel>, AddBoardValidator>();
 
             return services;
         }

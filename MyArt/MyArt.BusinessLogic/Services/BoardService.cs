@@ -55,6 +55,29 @@ namespace MyArt.BusinessLogic.Services
 
             await _db.SaveChangesAsync(cancellationToken);
         }
+        public async Task<List<ShortBoardViewModel>> GetAllByBoardsFilterAsync(BoardFilterViewModel filter, int page, int size, CancellationToken cancellationToken)
+        {
+            var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
+
+            var boards = await _boardProvider.GetAllByBoardsFilterAsync(filter, page, size, cancellationToken);
+
+            foreach (var board in boards)
+            {
+                var hasLiked = await _boardProvider.HasLikedBoardByIdAsync(userId, board.Id, cancellationToken);
+
+                if (hasLiked)
+                {
+                    board.HasLiked = true;
+                }
+                else
+                {
+                    board.HasLiked = false;
+                }
+
+            }
+
+            return boards;
+        }
         public async Task<BoardViewModel> GetBoardByIdAsync(int boardId, CancellationToken cancellationToken)
         {
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
