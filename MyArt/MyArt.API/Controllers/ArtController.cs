@@ -45,6 +45,18 @@ namespace MyArt.API.Controllers
             return Ok(result);
         }
 
+        [Route("user")]
+        [HttpGet(Name = nameof(GetUserArts))]
+        public async Task<ActionResult<ShortArtViewModel>> GetUserArts([FromQuery] int page = 0, [FromQuery] int size = 15)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _artService.GetAllUserArtsAsync(page, size, cancellationToken);
+
+            return Ok(result);
+        }
+
         [Route("filter")]
         [HttpPut(Name = nameof(GetFilterArts))]
         public async Task<ActionResult<ShortArtViewModel>> GetFilterArts([FromForm] ArtFilterViewModel artFilterViewModel, [FromQuery] int page = 0, [FromQuery] int size = 10)

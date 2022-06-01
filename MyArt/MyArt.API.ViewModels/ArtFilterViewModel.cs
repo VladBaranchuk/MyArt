@@ -9,6 +9,7 @@ namespace MyArt.API.ViewModels
         public bool Popular { get; set; }
         public string? Material { get; set; }
         public string? ArtForm { get; set; }
+        public int? Size { get; set; }
         public int? Type { get; set; }
     }
 }

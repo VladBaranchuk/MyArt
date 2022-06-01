@@ -54,15 +54,18 @@ namespace MyArt.DataAccess.Providers
             var result = await _mapper.ProjectTo<CommentViewModel>(query).ToListAsync(cancellationToken);
             return result;
         }
+
         public async Task<int> GetCommentsCountByIdAsync(int id, CancellationToken cancellationToken)
         {
             var count = await _artCommentsEntities.Where(x => x.ArtId == id).CountAsync(cancellationToken);
             return count;
         }
+
         public async override Task<Art> GetItemByIdAsync(int id, CancellationToken cancellationToken)
         {
             return await _artEntities.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
         }
+
         public async Task<List<ShortArtViewModel>> GetAllItemsAsync(int page, int size, int type, CancellationToken cancellationToken)
         {
             var query = _artEntities
@@ -89,11 +92,13 @@ namespace MyArt.DataAccess.Providers
 
             return await _mapper.ProjectTo<ShortArtViewModel>(result).ToListAsync(cancellationToken);
         }
+
         public async Task<int> GetLikesCountByIdAsync(int id, CancellationToken cancellationToken)
         {
             var count = await _likeArtsEntities.Where(x => x.ArtId == id).CountAsync(cancellationToken);
             return count;
         }
+
         public async Task<bool> HasLikedArtByIdAsync(int userId, int artId, CancellationToken cancellationToken)
         {
             var hasLiked = await _likeArtsEntities
@@ -102,6 +107,7 @@ namespace MyArt.DataAccess.Providers
 
             return hasLiked;
         }
+
         public async Task<bool> HasOnBoardArtByIdAsync(int userId, int artId, CancellationToken cancellationToken)
         {
             var hasOnBoard = await _artToBoardsEntities
@@ -110,6 +116,7 @@ namespace MyArt.DataAccess.Providers
 
             return hasOnBoard;
         }
+
         public async Task<List<ShortArtViewModel>> GetAllUserItemsAsync(int userId, int page, int size, CancellationToken cancellationToken)
         {
             var query = _artEntities
@@ -130,6 +137,7 @@ namespace MyArt.DataAccess.Providers
 
             return await _mapper.ProjectTo<ShortArtViewModel>(query).ToListAsync(cancellationToken);
         }
+
         public async Task<List<ShortArtViewModel>> GetAllBoardItemsAsync(int boardId, int page, int size, CancellationToken cancellationToken)
         {
             var query = _artToBoardsEntities
@@ -151,6 +159,7 @@ namespace MyArt.DataAccess.Providers
 
             return await _mapper.ProjectTo<ShortArtViewModel>(query).ToListAsync(cancellationToken);
         }
+
         public async Task<List<ShortArtViewModel>> GetAllByArtsFilterAsync(ArtFilterViewModel filter, int page, int size, CancellationToken cancellationToken)
         {
             var query = _artEntities.AsQueryable();
@@ -190,6 +199,11 @@ namespace MyArt.DataAccess.Providers
                 query = query.Where(x => x.Material == filter.Material);
             }
 
+            if (filter.Size.HasValue && filter.Size.Value != 0)
+            {
+                query = query.Where(x => x.Size == filter.Size.Value);
+            }
+
             var resultQuery = query
                 .Skip(page * size)
                 .Take(size)
@@ -208,6 +222,7 @@ namespace MyArt.DataAccess.Providers
 
             return result;
         }
+
         public async Task<List<ShortArtViewModel>> GetAllNewUserItemsAsync(int userId, int page, int size, CancellationToken cancellationToken)
         {
             var query = _artEntities
@@ -228,6 +243,7 @@ namespace MyArt.DataAccess.Providers
 
             return await _mapper.ProjectTo<ShortArtViewModel>(query).ToListAsync(cancellationToken);
         }
+
         public async Task<byte[]> GetImageAsync(int artId, CancellationToken cancellationToken)
         {
             var query = await _artEntities
@@ -237,27 +253,41 @@ namespace MyArt.DataAccess.Providers
 
             return query;
         }
+
         public async Task<int> GetPaintingsCountAsync(int id, CancellationToken token)
         {
             return await _artEntities
                 .Where(x => x.UserId == id && x.Type == EType.Picture)
                 .CountAsync(token);
         }
+
         public async Task<int> GetPhotosCountAsync(int id, CancellationToken token)
         {
             return await _artEntities
                 .Where(x => x.UserId == id && x.Type == EType.Photo)
                 .CountAsync(token);
         }
+
         public async Task<int> GetSculpturesCountAsync(int id, CancellationToken token)
         {
             return await _artEntities
                 .Where(x => x.UserId == id && x.Type == EType.Sculpture)
                 .CountAsync(token);
         }
+
         public async Task<bool> HasAnyItemByIdAsync(int id, CancellationToken cancellationToken)
         {
             return await _artEntities.AnyAsync(x => x.Id == id, cancellationToken);
+        }
+
+        public async Task<int> GetAllCountAsync(CancellationToken cancellationToken)
+        {
+            return await _artEntities.CountAsync(cancellationToken);
+        }
+
+        public async Task<int> GetFullCoastAsync(CancellationToken cancellationToken)
+        {
+            return await _artEntities.Select(x => x.Price).SumAsync(cancellationToken);
         }
     }
 }

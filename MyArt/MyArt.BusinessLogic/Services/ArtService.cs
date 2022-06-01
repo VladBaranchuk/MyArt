@@ -208,6 +208,7 @@ namespace MyArt.BusinessLogic.Services
                 Moderation = EModeration.NotModerated,
                 Type = (EType)createArtVM.Type,
                 Material = createArtVM.Material,
+                Size = (int)createArtVM.Size,
                 Date = DateTime.Now,
                 Data = artData,
                 UserId = userId

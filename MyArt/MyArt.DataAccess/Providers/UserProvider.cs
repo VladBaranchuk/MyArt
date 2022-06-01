@@ -112,5 +112,11 @@ namespace MyArt.DataAccess.Providers
 
             return result;
         }
+
+        public async Task<int> GetAllCountAsync(CancellationToken cancellationToken)
+        {
+            return await _userEntities.CountAsync(cancellationToken);
+        }
+        
     }
 }

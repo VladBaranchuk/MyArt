@@ -44,6 +44,18 @@ namespace MyArt.API.Controllers
             return Ok(result);
         }
 
+        [Route("user")]
+        [HttpGet(Name = nameof(GetUserBoards))]
+        public async Task<ActionResult<ShortBoardViewModel>> GetUserBoards([FromQuery] int page = 0, [FromQuery] int size = 15)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _boardService.GetAllUserBoardsAsync(page, size, cancellationToken);
+
+            return Ok(result);
+        }
+
         [Authorize]
         [Route("userboards/{id}")]
         [HttpGet(Name = nameof(GetUserBoards))]
