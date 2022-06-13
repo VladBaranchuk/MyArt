@@ -13,17 +13,20 @@ namespace MyArt.API.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IArtService _artService;
+        private readonly IEmailService _emailService;
         private readonly IValidator<ArtFilterViewModel> _filterValidator;
         private readonly IValidator<CreateArtViewModel> _createValidator;
 
         public ArtController(
             IHttpContextAccessor httpContextAccessor,
             IArtService artService,
+            IEmailService emailService,
             IValidator<CreateArtViewModel> createValidator,
             IValidator<ArtFilterViewModel> filterValidator)
         {
             _httpContextAccessor = httpContextAccessor;
             _artService = artService;
+            _emailService = emailService;
             _createValidator = createValidator;
             _filterValidator = filterValidator;
         }
@@ -60,6 +63,30 @@ namespace MyArt.API.Controllers
 
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             var result = await _artService.GetAllUserArtsAsync(page, size, cancellationToken);
+
+            return Ok(result);
+        }
+
+        [Route("userById")]
+        [HttpGet(Name = nameof(GetUserArtsById))]
+        public async Task<ActionResult<ShortArtViewModel>> GetUserArtsById([FromQuery] int page = 0, [FromQuery] int size = 15, [FromQuery] int userId = 0)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _artService.GetAllUserArtsByIdAsync(page, size, userId, cancellationToken);
+
+            return Ok(result);
+        }
+
+        [Route("board")]
+        [HttpGet(Name = nameof(GetBoardArts))]
+        public async Task<ActionResult<ShortArtViewModel>> GetBoardArts([FromQuery] int page = 0, [FromQuery] int size = 15, [FromQuery] int boardId = 0)
+        {
+            //_authValidator.ValidateAndThrow(authVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _artService.GetAllBoardArtsAsync(page, size, boardId, cancellationToken);
 
             return Ok(result);
         }
@@ -110,6 +137,7 @@ namespace MyArt.API.Controllers
 
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             var result = await _artService.AddCommentByIdAsync(comment, cancellationToken);
+            await _emailService.SendEmailAboutCommentAsync(comment, cancellationToken);
 
             return Ok(result);
         }

@@ -16,5 +16,6 @@ namespace MyArt.DataAccess.Contracts.Providers
         Task<List<AuthorViewModel>> GetAllItemsAsync(int page, int size, CancellationToken cancellationToken);
         Task<List<AuthorViewModel>> GetAllByAuthorsFilterAsync(AuthorFilterViewModel filter, int page, int size, CancellationToken cancellationToken);
         Task<int> GetAllCountAsync(CancellationToken cancellationToken);
+        Task<bool> HasAnyAvatarAsync(int userId, CancellationToken cancellationToken);
     }
 }

@@ -74,6 +74,15 @@ namespace MyArt.DataAccess.Providers
 
             return query;
         }
+
+        public async Task<bool> HasAnyAvatarAsync(int userId, CancellationToken cancellationToken)
+        {
+            var query = await _userEntities
+                .Where(x => x.Id == userId)
+                .AnyAsync(x => x.Data != null, cancellationToken);
+
+            return query;
+        }
         public Task<bool> HasAnyByEmailAsync(string email, CancellationToken token)
         {
             return _userEntities.AnyAsync(x => x.Email == email, token);

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using MyArt.API.Infrastructure.Models;
 using MyArt.API.ViewModels;
 using MyArt.BusinessLogic.Contracts;
+using MyArt.BusinessLogic.Services;
 using System.Net.Mime;
 
 namespace MyArt.API.Controllers
@@ -14,6 +15,7 @@ namespace MyArt.API.Controllers
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserService _userService;
+        private readonly IEmailService _emailService;
         private readonly ICurrentUserService _currentUserService;
         private readonly IJwtService _jwtService;
         private readonly IValidator<RegisterViewModel> _registerValidator;
@@ -27,10 +29,12 @@ namespace MyArt.API.Controllers
             IValidator<UpdatePublicUserInfoViewModel> updateValidator,
             ICurrentUserService currenUserService,
             IJwtService jwtService,
+            IEmailService emailService,
             IUserService userService)
         {
             _httpContextAccessor = httpContextAccessor;
             _userService = userService;
+            _emailService = emailService;
             _registerValidator = registerValidator;
             _authValidator = authValidator;
             _jwtService = jwtService;
@@ -49,7 +53,20 @@ namespace MyArt.API.Controllers
             return Ok(result);
         }
 
-        
+        [Authorize]
+        [Route("email")]
+        [HttpPost(Name = nameof(SendMail))]
+        public async Task<IActionResult> SendMail(MailViewModel mailViewModel)
+        {
+            //_registerValidator.ValidateAndThrow(registerVM);
+
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            await _emailService.SendEmailAsync(mailViewModel, cancellationToken);
+
+            return Ok();
+        }
+
+
         [Route("all")]
         [HttpPost(Name = nameof(GetAuthors))]
         public async Task<ActionResult<List<AuthorViewModel>>> GetAuthors([FromQuery] int page = 0, [FromQuery] int size = 15)
@@ -141,6 +158,16 @@ namespace MyArt.API.Controllers
             return File(result, MediaTypeNames.Image.Jpeg);
         }
 
+        [Route("image/hasAny/{id}")]
+        [HttpGet(Name = nameof(HasAnyAvatar))]
+        public async Task<ActionResult<byte[]>> HasAnyAvatar(int id)
+        {
+            var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
+            var result = await _userService.HasAnyAvatarAsync(id, cancellationToken);
+
+            return Ok(result);
+        }
+
         [Authorize]
         [Route("updateAvatar")]
         [HttpGet(Name = nameof(UpdateAvatar))]
@@ -154,7 +181,7 @@ namespace MyArt.API.Controllers
 
         [Route("account")]
         [HttpGet(Name = nameof(GetAccount))]
-        public async Task<ActionResult<ShortArtViewModel>> GetAccount([FromQuery] string alias)
+        public async Task<ActionResult<AccountViewModel>> GetAccount([FromQuery] string alias)
         {
             //_authValidator.ValidateAndThrow(authVM);
 

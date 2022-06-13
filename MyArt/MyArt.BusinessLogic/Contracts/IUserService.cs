@@ -14,6 +14,7 @@ namespace MyArt.BusinessLogic.Contracts
         Task<UpdatePublicUserInfoViewModel> UpdatePublicUserInfoAsync(UpdatePublicUserInfoViewModel infoVM, CancellationToken cancellationToken);
         Task<CabinetViewModel> GetCabinetAsync(CancellationToken cancellationToken);
         Task<byte[]> GetAvatarAsync(int userId, CancellationToken cancellationToken);
+        Task<bool> HasAnyAvatarAsync(int userId, CancellationToken cancellationToken);
         Task UpdateAvatarAsync(UpdateAvatarViewModel avatarVM, CancellationToken cancellationToken);
         Task<AccountViewModel> GetAccountAsync(string alias, CancellationToken cancellationToken);
         Task<List<AuthorViewModel>> GetAllAuthorsAsync(int page, int size, CancellationToken cancellationToken);

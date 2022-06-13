@@ -133,6 +133,24 @@ namespace MyArt.BusinessLogic.Services
             var hasOnBoard = await _artProvider.HasOnBoardArtByIdAsync(currentUserId, artId, cancellationToken);
             var arts = await _artProvider.GetAllUserItemsAsync(user.Id, 0, 10, cancellationToken);
 
+            var month = "";
+
+            switch (art.Month)
+            {
+                case EMonth.January : month = "Январь"; break;
+                case EMonth.February: month = "Февраль"; break;
+                case EMonth.March: month = "Март"; break;
+                case EMonth.April: month = "Апрель"; break;
+                case EMonth.May: month = "Май"; break;
+                case EMonth.June: month = "Июнь"; break;
+                case EMonth.July: month = "Июль"; break;
+                case EMonth.August: month = "Август"; break;
+                case EMonth.September: month = "Сентябрь"; break;
+                case EMonth.October: month = "Октябрь"; break;
+                case EMonth.November: month = "Ноябрь"; break;
+                case EMonth.December: month = "Декабрь"; break;
+            }
+
             var artViewModel = new ArtViewModel()
             {
                 Id = art.Id,
@@ -143,7 +161,7 @@ namespace MyArt.BusinessLogic.Services
                 MutedColor = art.MutedColor,
                 Price = art.Price,
                 ShareCount = art.ShareCount,
-                Month = art.Month.ToString(),
+                Month = month,
                 Year = art.Year,
                 SellingAvailability = (int)art.SellingAvailability,
                 Visible = (int)art.Visible,
@@ -176,6 +194,18 @@ namespace MyArt.BusinessLogic.Services
             var userId = _currentUserService.GetUserIdByHttpContext(cancellationToken);
 
             var arts = await _artProvider.GetAllUserItemsAsync(userId, page, size, cancellationToken);
+
+            return arts;
+        }
+        public async Task<List<ShortArtViewModel>> GetAllUserArtsByIdAsync(int page, int size, int userId, CancellationToken cancellationToken)
+        {
+            var arts = await _artProvider.GetAllUserItemsAsync(userId, page, size, cancellationToken);
+
+            return arts;
+        }
+        public async Task<List<ShortArtViewModel>> GetAllBoardArtsAsync(int page, int size, int boardId, CancellationToken cancellationToken)
+        {
+            var arts = await _artProvider.GetAllBoardItemsAsync(page, size, boardId, cancellationToken);
 
             return arts;
         }

@@ -213,7 +213,7 @@ namespace MyArt.BusinessLogic.Services
             var photosCount = await _artProvider.GetPhotosCountAsync(user.Id, cancellationToken);
             var sculpturesCount = await _artProvider.GetSculpturesCountAsync(user.Id, cancellationToken);
             var arts = await _artProvider.GetAllUserItemsAsync(user.Id, 0, 10, cancellationToken);
-            var newArts = await _artProvider.GetAllNewUserItemsAsync(user.Id, 0, 12, cancellationToken);
+            var newArts = await _artProvider.GetAllNewUserItemsAsync(user.Id, 0, 4, cancellationToken);
 
             var accountVM = new AccountViewModel()
             {
@@ -244,6 +244,13 @@ namespace MyArt.BusinessLogic.Services
             }
 
             return authors;
+        }
+
+        public async Task<bool> HasAnyAvatarAsync(int userId, CancellationToken cancellationToken)
+        {
+            var hasAny = await _userProvider.HasAnyAvatarAsync(userId, cancellationToken);
+
+            return hasAny;
         }
     }
 }

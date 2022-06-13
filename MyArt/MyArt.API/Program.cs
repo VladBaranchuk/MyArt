@@ -90,6 +90,7 @@ builder.Services.AddScoped<IBoardService, BoardService>();
 builder.Services.AddScoped<IHomeService, HomeService>();
 builder.Services.AddScoped<IArtFormService, ArtFormService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddCors(options =>
 {

@@ -46,7 +46,7 @@ namespace MyArt.BusinessLogic.Services
             var notification = new NotificationViewModel()
             {
                 UserId = user.Id,
-                Message = $"Пользователь с ником {currentUser.Alias} оценил вашу работу",
+                Message = $"Пользователь с ником {currentUser.Alias} прокомментировал вашу работу",
                 CurrentUserId = currentUserId
             };
 

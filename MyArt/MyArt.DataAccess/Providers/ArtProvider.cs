@@ -85,6 +85,7 @@ namespace MyArt.DataAccess.Providers
                     Name = x.Name,
                     Year = x.Year,
                     Alias = x.User.Alias,
+                    Price = x.Price,
                     BrightColor = x.BrightColor,
                     MutedColor = x.MutedColor,
                     DarkColor = x.DarkColor
@@ -130,6 +131,7 @@ namespace MyArt.DataAccess.Providers
                     Name = x.Name,
                     Year = x.Year,
                     Alias = x.User.Alias,
+                    Price = x.Price,
                     BrightColor = x.BrightColor,
                     MutedColor = x.MutedColor,
                     DarkColor = x.DarkColor
@@ -152,6 +154,7 @@ namespace MyArt.DataAccess.Providers
                     Name = x.Name,
                     Year = x.Year,
                     Alias = x.User.Alias,
+                    Price = x.Price,
                     BrightColor = x.BrightColor,
                     MutedColor = x.MutedColor,
                     DarkColor = x.DarkColor
@@ -213,6 +216,7 @@ namespace MyArt.DataAccess.Providers
                     Name = x.Name,
                     Year = x.Year,
                     Alias = x.User.Alias,
+                    Price = x.Price,
                     BrightColor = x.BrightColor,
                     MutedColor = x.MutedColor,
                     DarkColor = x.DarkColor
@@ -236,6 +240,7 @@ namespace MyArt.DataAccess.Providers
                     Name = x.Name,
                     Year = x.Year,
                     Alias = x.User.Alias,
+                    Price = x.Price,
                     BrightColor = x.BrightColor,
                     MutedColor = x.MutedColor,
                     DarkColor = x.DarkColor
