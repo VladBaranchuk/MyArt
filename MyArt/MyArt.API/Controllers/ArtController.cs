@@ -171,6 +171,8 @@ namespace MyArt.API.Controllers
         {
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             await _artService.BuyArtAsync(id, cancellationToken);
+            await _emailService.SendEmailAboutBouhtAsync(id, cancellationToken);
+            await _emailService.SendEmailAboutBouhtToArtistAsync(id, cancellationToken);
 
             return Ok();
         }

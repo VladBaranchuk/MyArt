@@ -19,12 +19,14 @@ namespace MyArt.API.Controllers
         private readonly ICurrentUserService _currentUserService;
         private readonly IJwtService _jwtService;
         private readonly IValidator<RegisterViewModel> _registerValidator;
+        private readonly IValidator<MailViewModel> _mailValidator;
         private readonly IValidator<AuthenticationViewModel> _authValidator;
         private readonly IValidator<UpdatePublicUserInfoViewModel> _updateValidator;
 
         public UserController(
             IHttpContextAccessor httpContextAccessor,
             IValidator<RegisterViewModel> registerValidator,
+            IValidator<MailViewModel> mailValidator,
             IValidator<AuthenticationViewModel> authValidator,
             IValidator<UpdatePublicUserInfoViewModel> updateValidator,
             ICurrentUserService currenUserService,
@@ -36,6 +38,7 @@ namespace MyArt.API.Controllers
             _userService = userService;
             _emailService = emailService;
             _registerValidator = registerValidator;
+            _mailValidator = mailValidator;
             _authValidator = authValidator;
             _jwtService = jwtService;
             _currentUserService = currenUserService;
@@ -58,7 +61,7 @@ namespace MyArt.API.Controllers
         [HttpPost(Name = nameof(SendMail))]
         public async Task<IActionResult> SendMail(MailViewModel mailViewModel)
         {
-            //_registerValidator.ValidateAndThrow(registerVM);
+            _mailValidator.ValidateAndThrow(mailViewModel);
 
             var cancellationToken = _httpContextAccessor.HttpContext?.RequestAborted ?? CancellationToken.None;
             await _emailService.SendEmailAsync(mailViewModel, cancellationToken);

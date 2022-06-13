@@ -83,6 +83,7 @@ namespace MyArt.API.Infrastructure.Configurations
             services.AddScoped<IValidator<UpdatePublicUserInfoViewModel>, UpdateUserValidator>();
             services.AddScoped<IValidator<CreateArtViewModel>, AddArtValidator>();
             services.AddScoped<IValidator<CreateBoardViewModel>, AddBoardValidator>();
+            services.AddScoped<IValidator<MailViewModel>, MailVlidator>();
 
             return services;
         }
